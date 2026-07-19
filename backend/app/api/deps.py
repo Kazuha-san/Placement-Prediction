@@ -1,10 +1,10 @@
 from typing import Generator, Optional
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status, Request
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
 from pydantic import ValidationError
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.future import select
+from sqlalchemy import select
 
 from app.core import security
 from app.core.config import settings
@@ -16,13 +16,15 @@ import uuid
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token", auto_error=False)
 
 async def get_current_user_or_guest(
-    db: AsyncSession = Depends(get_db), token: str = Depends(oauth2_scheme)
+    request: Request, db: AsyncSession = Depends(get_db), token: str = Depends(oauth2_scheme)
 ) -> Optional[User]:
-    if not token:
+    cookie_token = request.cookies.get("access_token")
+    actual_token = cookie_token or token
+    if not actual_token:
         return None
     try:
         payload = jwt.decode(
-            token, settings.JWT_SECRET, algorithms=[security.ALGORITHM]
+            actual_token, settings.JWT_SECRET, algorithms=[security.ALGORITHM]
         )
         token_data = TokenPayload(**payload)
     except (JWTError, ValidationError):

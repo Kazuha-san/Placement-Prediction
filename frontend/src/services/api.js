@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:8000';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
 export const api = {
   predict: async (profileData) => {
@@ -13,7 +13,8 @@ export const api = {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(profileData),
-        signal: controller.signal
+        signal: controller.signal,
+        credentials: 'include'
       });
 
       clearTimeout(timeoutId);
@@ -32,7 +33,7 @@ export const api = {
   getHistory: async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/history`, {
-        // Normally credentials: 'include' for httpOnly cookie or auth header
+        credentials: 'include'
       });
 
       if (!response.ok) {
@@ -47,7 +48,9 @@ export const api = {
 
   getProgress: async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/progress`);
+      const response = await fetch(`${API_BASE_URL}/progress`, {
+        credentials: 'include'
+      });
       if (!response.ok) {
         throw new Error("couldn't load progress, please try again");
       }

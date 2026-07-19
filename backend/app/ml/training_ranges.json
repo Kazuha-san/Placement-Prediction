@@ -1,0 +1,11 @@
+{
+  "cgpa": { "min": 6.5, "max": 9.1, "_metadata": "float, 0-10" },
+  "internships": { "min": 0.0, "max": 2.0, "_metadata": "integer count" },
+  "projects": { "min": 0.0, "max": 3.0, "_metadata": "integer count" },
+  "workshops_certifications": { "min": 0.0, "max": 3.0, "_metadata": "integer count" },
+  "aptitude_test_score": { "min": 60.0, "max": 90.0, "_metadata": "numeric score" },
+  "soft_skills_rating": { "min": 3.0, "max": 4.8, "_metadata": "numeric rating" },
+  "extracurricular_activities": { "min": 0.0, "max": 1.0, "_metadata": "0 or 1" },
+  "placement_training": { "min": 0.0, "max": 1.0, "_metadata": "0 or 1" },
+  "active_backlog_count": { "min": 0.0, "max": 9.0, "_metadata": "integer count" }
+}

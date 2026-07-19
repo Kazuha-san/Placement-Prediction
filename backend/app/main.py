@@ -5,10 +5,12 @@ from app.api.routes import auth, predict, history, progress
 
 app = FastAPI(title="Placement Predictions Backend")
 
+from app.core.config import settings
+
 # CORS config
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # Should be restricted in production
+    allow_origins=[settings.FRONTEND_URL],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

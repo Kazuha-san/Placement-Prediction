@@ -23,8 +23,6 @@ Thumbs.db
 *BUILD_PLAN.md
 read_docx.py
 generate_mock_model.py
-*.svg
-training_ranges.json
 Scripts/
 
 # Frontend Logs & Specifics

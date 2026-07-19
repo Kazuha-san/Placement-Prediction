@@ -1,16 +1,28 @@
-# React + Vite
+# Placement Predictions Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+The frontend interface for the Placement Predictions application, built with React and Vite. It provides a dashboard to input academic metrics, view predictions, and track historical progress.
 
-Currently, two official plugins are available:
+## Tech Stack
+- **Framework**: React 18
+- **Build Tool**: Vite
+- **Routing**: React Router
+- **Styling**: Vanilla CSS
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Setup and Running
 
-## React Compiler
+1. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+2. **Environment Variables**:
+   Copy the example environment file and adjust if necessary:
+   ```bash
+   cp .env.example .env
+   ```
+   *Note: Ensure `VITE_API_BASE_URL` points to your backend server (defaults to `http://localhost:8000`).*
 
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+3. **Start Development Server**:
+   ```bash
+   npm run dev
+   ```

@@ -2,18 +2,20 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+
 const SignIn = () => {
   const navigate = useNavigate();
   const { loginAsGuest } = useAuth();
 
   const handleGoogleLogin = () => {
     // Redirect to backend OAuth endpoint
-    window.location.href = 'http://localhost:8000/auth/google/login';
+    window.location.href = `${API_BASE_URL}/auth/google/login`;
   };
 
   const handleMicrosoftLogin = () => {
     // Redirect to backend OAuth endpoint
-    window.location.href = 'http://localhost:8000/auth/microsoft/login';
+    window.location.href = `${API_BASE_URL}/auth/microsoft/login`;
   };
 
   const handleGuestLogin = () => {

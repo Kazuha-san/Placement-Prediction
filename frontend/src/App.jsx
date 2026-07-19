@@ -10,11 +10,9 @@ import Progress from './pages/Progress';
 const ProtectedRoute = ({ children }) => {
   const { user, isGuest } = useAuth();
   
-  if (isGuest) {
+  if (isGuest || !user) {
     return <Navigate to="/" replace />;
   }
-
-  // Real app would also check if !user and redirect to /, but we're keeping it simple for the auth mockup
   
   return children;
 };
@@ -24,9 +22,7 @@ const AuthCallback = () => {
   const { loginSuccess } = useAuth();
 
   useEffect(() => {
-    // Mocking an auth callback handling
-    // Real implementation: check httpOnly cookies or extract JWT from URL if that's the chosen flow
-    loginSuccess({ id: 'user-1', name: 'Mock User' });
+    loginSuccess();
     navigate('/profile', { replace: true });
   }, [loginSuccess, navigate]);
 

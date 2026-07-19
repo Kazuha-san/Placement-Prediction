@@ -1,9 +1,12 @@
 import json
 import joblib
 import asyncio
+import time
+import logging
 from fastapi import HTTPException
 from app.core.config import settings
 import numpy as np
+from app.ml.feature_schema import FEATURE_NAMES
 
 # Load model and training ranges on startup
 try:
@@ -44,18 +47,21 @@ async def predict(profile_data: dict) -> tuple[bool, float, dict]:
         raise HTTPException(status_code=503, detail="Prediction service unavailable: Model not loaded")
         
     def do_predict():
-        # Feature order based on feature_schema.py mock
-        features = [
-            profile_data.get("cgpa", 0),
-            profile_data.get("internships", 0),
-            profile_data.get("projects", 0),
-            profile_data.get("certifications", 0),
-            profile_data.get("aptitude_score", 0),
-            profile_data.get("soft_skills_rating", 0),
-            1 if profile_data.get("extracurricular_activities") else 0,
-            1 if profile_data.get("placement_training") else 0,
-            profile_data.get("backlogs", 0)
-        ]
+        # Map model feature names to API schema names
+        schema_mapping = {
+            "workshops_certifications": "certifications",
+            "aptitude_test_score": "aptitude_score",
+            "active_backlog_count": "backlogs"
+        }
+
+        # Feature order based on feature_schema.py
+        features = []
+        for feat in FEATURE_NAMES:
+            schema_key = schema_mapping.get(feat, feat)
+            if feat in ["extracurricular_activities", "placement_training"]:
+                features.append(1 if profile_data.get(schema_key) else 0)
+            else:
+                features.append(profile_data.get(schema_key, 0))
         X = np.array([features])
         
         # Scikit-learn interface
@@ -77,12 +83,17 @@ async def predict(profile_data: dict) -> tuple[bool, float, dict]:
         return outcome, confidence, limiting_features
 
     try:
-        # Wrap inference in an async timeout (NFR-3.1 500ms max)
+        start_time = time.time()
+        # Overall budget timeout (NFR-1.1 2s max)
         outcome, confidence, limiting_features = await asyncio.wait_for(
-            asyncio.to_thread(do_predict), timeout=0.5
+            asyncio.to_thread(do_predict), timeout=1.9
         )
+        end_time = time.time()
+        # Performance target (NFR-3.1 500ms max)
+        if (end_time - start_time) > 0.5:
+            logging.warning("Inference exceeded 500ms timeout")
     except asyncio.TimeoutError:
-        print("Inference exceeded 500ms timeout")
+        logging.error("Inference exceeded 2-second timeout")
         raise HTTPException(status_code=503, detail="Prediction service unavailable: Inference timeout")
     except Exception as e:
         raise HTTPException(status_code=503, detail=f"Prediction service unavailable: {str(e)}")
