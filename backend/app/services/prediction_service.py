@@ -66,7 +66,8 @@ async def predict(profile_data: dict) -> tuple[bool, float, dict]:
         
         # Scikit-learn interface
         if hasattr(model, 'predict_proba'):
-            # Verified against real model: classes_ = [0, 1], so index 1 = Placed
+            # Verified: "placement_status" was encoded as {"placed": 1, "notplaced": 0}
+            # in the dataset preprocessing notebook, so proba[1] = confidence of "Placed"
             proba = model.predict_proba(X)[0]
             if len(proba) > 1:
                 confidence = float(proba[1])
