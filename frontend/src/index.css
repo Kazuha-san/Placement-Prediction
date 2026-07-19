@@ -1,36 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #3b82f6; /* blue-500 */
-  --color-primary-hover: #2563eb; /* blue-600 */
-  --color-surface: #1e293b; /* slate-800 */
-  --color-surface-light: #334155; /* slate-700 */
-  --color-background: #0f172a; /* slate-900 */
-  --color-text-main: #f8fafc; /* slate-50 */
-  --color-text-muted: #94a3b8; /* slate-400 */
-  --color-error: #ef4444; /* red-500 */
-  
+  /* Base surfaces */
+  --color-cream: #FFFCF7;    /* page bg */
+  --color-card: #FFFFFF;     /* card bg */
+  --color-panel: #FBF6EC;    /* nested panel bg inside a card */
+
+  /* Text */
+  --color-ink: #2E2A25;      /* warm charcoal, main text */
+  --color-muted: #82796C;    /* muted warm gray */
+
+  /* Borders */
+  --color-line: #E9E1D2;
+  --color-line-strong: #D8CCB4;
+
+  /* Primary = baby blue */
+  --color-blue: #D9CDEF;
+  --color-blue-hover: #C7B8E8;
+  --color-blue-ink: #4A3B7A;   /* text/icons on baby blue, links */
+
+  /* Secondary = soft pink */
+  --color-pink: #F4C6D7;
+  --color-pink-ink: #82304C;
+
+  /* Accent / success = soft yellow */
+  --color-yellow: #FCE38A;
+  --color-yellow-ink: #6B4E02;
+
+  /* Calm "needs work" alternative to red = muted sage */
+  --color-sage: #B8CFAE;
+  --color-sage-ink: #35502E;
+
+  /* Reserved for real errors/validation only, kept soft */
+  --color-coral: #D9695B;
+  --color-coral-bg: #FBEAE7;
+  --color-coral-line: #EFC3BA;
+
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-display: 'Fredoka', 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --radius-card: 1.5rem;   /* 24px */
 }
 
 @layer base {
   body {
-    background-color: var(--color-background);
-    color: var(--color-text-main);
+    background-color: var(--color-cream);
+    color: var(--color-ink);
     font-family: var(--font-sans);
     margin: 0;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+  h1, h2, h3 {
+    font-family: var(--font-display);
+  }
 }
 
-/* Glassmorphism utilities */
+/* Flat pastel card — replaces the old glassmorphism panel */
 @layer utilities {
   .glass-panel {
-    background: rgba(30, 41, 59, 0.7);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    background: var(--color-card);
+    border: 1.5px solid var(--color-line);
+    border-radius: var(--radius-card);
+  }
+  .font-display {
+    font-family: var(--font-display);
+  }
+  .font-mono-readout {
+    font-family: var(--font-mono);
   }
 }

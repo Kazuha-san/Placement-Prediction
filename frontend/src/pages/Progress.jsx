@@ -26,7 +26,7 @@ const Progress = () => {
 
   return (
     <div className="max-w-4xl mx-auto py-8 px-4">
-      <h2 className="text-2xl font-bold mb-6">Your Progress</h2>
+      <h2 className="font-display text-2xl font-semibold mb-6">Your progress</h2>
       
       {error && <ErrorBanner message={error} />}
 
@@ -35,8 +35,8 @@ const Progress = () => {
       )}
 
       {loading && (
-        <div className="flex justify-center p-12 glass-panel rounded-xl">
-          <div className="w-8 h-8 border-4 border-color-surface-light border-t-color-primary rounded-full animate-spin"></div>
+        <div className="flex justify-center p-12 glass-panel">
+          <div className="w-8 h-8 border-4 border-line border-t-blue-ink rounded-full animate-spin"></div>
         </div>
       )}
     </div>

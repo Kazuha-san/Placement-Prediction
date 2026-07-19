@@ -6,7 +6,7 @@ The frontend interface for the Placement Predictions application, built with Rea
 - **Framework**: React 18
 - **Build Tool**: Vite
 - **Routing**: React Router
-- **Styling**: Tailwind CSS
+- **Styling**: Vanilla CSS
 
 ## Setup and Running
 

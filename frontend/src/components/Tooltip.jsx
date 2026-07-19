@@ -11,11 +11,11 @@ const Tooltip = ({ text }) => {
       onMouseLeave={() => setIsVisible(false)}
       onClick={() => setIsVisible(!isVisible)}
     >
-      <Info className="w-4 h-4 text-color-text-muted cursor-pointer hover:text-color-primary transition-colors" />
+      <Info className="w-4 h-4 text-muted cursor-pointer hover:text-blue-ink transition-colors" />
       {isVisible && (
-        <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-max max-w-[200px] bg-color-surface-light text-color-text-main text-xs p-2 rounded shadow-lg z-10 glass-panel">
+        <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 w-max max-w-[220px] bg-ink text-cream text-xs leading-relaxed p-2.5 rounded-xl z-20 shadow-none">
           {text}
-          <div className="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-x-4 border-x-transparent border-t-4 border-t-color-surface-light"></div>
+          <div className="absolute right-full top-1/2 -translate-y-1/2 w-0 h-0 border-y-4 border-y-transparent border-r-4 border-r-ink"></div>
         </div>
       )}
     </div>

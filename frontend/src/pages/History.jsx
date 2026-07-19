@@ -10,46 +10,46 @@ const HistoryItem = ({ item }) => {
   const isPlaced = item.outcome;
 
   return (
-    <div className="border border-color-surface-light rounded-xl bg-color-surface-light/50 mb-4 overflow-hidden transition-all">
+    <div className="border-2 border-line rounded-2xl bg-white mb-4 overflow-hidden transition-all">
       <div 
-        className="flex items-center justify-between p-4 cursor-pointer hover:bg-color-surface-light"
+        className="flex items-center justify-between p-4 cursor-pointer hover:bg-panel"
         onClick={() => setExpanded(!expanded)}
       >
         <div>
-          <div className="text-sm text-color-text-muted mb-1">
+          <div className="text-sm text-muted mb-1">
             {new Date(item.created_at).toLocaleString()}
           </div>
-          <div className="font-semibold text-lg flex items-center gap-3">
-            <span className={isPlaced ? 'text-green-400' : 'text-red-400'}>
-              {isPlaced ? 'Placed' : 'Not Placed'}
+          <div className="font-display font-semibold text-lg flex items-center gap-3">
+            <span className={isPlaced ? 'text-sage-ink' : 'text-pink-ink'}>
+              {isPlaced ? 'Placed' : 'Not placed'}
             </span>
             <ConfidenceBadge score={item.confidence_score} />
           </div>
         </div>
         <div>
-          {expanded ? <ChevronUp className="text-color-text-muted" /> : <ChevronDown className="text-color-text-muted" />}
+          {expanded ? <ChevronUp className="text-muted" /> : <ChevronDown className="text-muted" />}
         </div>
       </div>
       
       {expanded && (
-        <div className="p-4 border-t border-color-surface-light bg-color-background/50">
-          <h4 className="text-sm font-semibold mb-3 text-color-text-muted uppercase tracking-wider">Profile Submitted</h4>
+        <div className="p-4 border-t-2 border-line bg-panel">
+          <h4 className="text-sm font-semibold mb-3 text-muted uppercase tracking-wider">Profile submitted</h4>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-4 gap-x-2 text-sm mb-4">
-            <div><span className="text-color-text-muted block">CGPA:</span> {item.cgpa}</div>
-            <div><span className="text-color-text-muted block">Internships:</span> {item.internships}</div>
-            <div><span className="text-color-text-muted block">Projects:</span> {item.projects}</div>
-            <div><span className="text-color-text-muted block">Certifications:</span> {item.certifications}</div>
-            <div><span className="text-color-text-muted block">Aptitude Score:</span> {item.aptitude_score}</div>
-            <div><span className="text-color-text-muted block">Soft Skills:</span> {item.soft_skills_rating}</div>
-            <div><span className="text-color-text-muted block">Extracurriculars:</span> {item.extracurricular_activities ? 'Yes' : 'No'}</div>
-            <div><span className="text-color-text-muted block">Training:</span> {item.placement_training ? 'Yes' : 'No'}</div>
-            <div><span className="text-color-text-muted block">Backlogs:</span> {item.backlogs}</div>
+            <div><span className="text-muted block">CGPA:</span> {item.cgpa}</div>
+            <div><span className="text-muted block">Internships:</span> {item.internships}</div>
+            <div><span className="text-muted block">Projects:</span> {item.projects}</div>
+            <div><span className="text-muted block">Certifications:</span> {item.certifications}</div>
+            <div><span className="text-muted block">Aptitude Score:</span> {item.aptitude_score}</div>
+            <div><span className="text-muted block">Soft Skills:</span> {item.soft_skills_rating}</div>
+            <div><span className="text-muted block">Extracurriculars:</span> {item.extracurricular_activities ? 'Yes' : 'No'}</div>
+            <div><span className="text-muted block">Training:</span> {item.placement_training ? 'Yes' : 'No'}</div>
+            <div><span className="text-muted block">Backlogs:</span> {item.backlogs}</div>
           </div>
           
           {item.limiting_features && Object.keys(item.limiting_features).length > 0 && (
             <>
-              <h4 className="text-sm font-semibold mb-2 text-color-text-muted uppercase tracking-wider">Limiting Features</h4>
-              <ul className="list-disc pl-5 text-sm text-color-text-main space-y-1">
+              <h4 className="text-sm font-semibold mb-2 text-muted uppercase tracking-wider">Limiting features</h4>
+              <ul className="list-disc pl-5 text-sm text-ink space-y-1">
                 {Object.entries(item.limiting_features).map(([key, value]) => (
                   <li key={key}>{key}: {value}</li>
                 ))}
@@ -85,7 +85,7 @@ const History = () => {
 
   return (
     <div className="max-w-3xl mx-auto py-8 px-4">
-      <h2 className="text-2xl font-bold mb-6">Prediction History</h2>
+      <h2 className="font-display text-2xl font-semibold mb-6">Prediction history</h2>
       
       {error && <ErrorBanner message={error} />}
       
@@ -99,7 +99,7 @@ const History = () => {
 
       {loading && (
         <div className="flex justify-center p-12">
-          <div className="w-8 h-8 border-4 border-color-surface-light border-t-color-primary rounded-full animate-spin"></div>
+          <div className="w-8 h-8 border-4 border-line border-t-blue-ink rounded-full animate-spin"></div>
         </div>
       )}
     </div>

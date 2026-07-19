@@ -36,17 +36,15 @@ export const AuthProvider = ({ children }) => {
     fetchUser();
   }, []);
 
-  const loginAsGuest = async () => {
-    try {
-      await fetch(`${API_BASE_URL}/auth/guest`, {
-        method: 'POST',
-        credentials: 'include'
-      });
-    } catch (error) {
-      console.error("Failed to login as guest on backend:", error);
-    }
+  const loginAsGuest = () => {
     setIsGuest(true);
     setUser(null);
+  };
+
+  const loginAsDevUser = () => {
+    if (!import.meta.env.DEV) return;
+    setUser({ id: 'dev-preview', name: 'Dev preview', email: 'dev@preview.local' });
+    setIsGuest(false);
   };
 
   const loginSuccess = () => {
@@ -65,7 +63,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ user, isGuest, loginAsGuest, loginSuccess, logout }}>
+    <AuthContext.Provider value={{ user, isGuest, loginAsGuest, loginAsDevUser, loginSuccess, logout }}>
       {children}
     </AuthContext.Provider>
   );

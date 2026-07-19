@@ -135,8 +135,8 @@ const ProfileForm = () => {
 
   return (
     <div className="max-w-2xl mx-auto py-8 px-4">
-      <div className="glass-panel p-8 rounded-2xl">
-        <h2 className="text-2xl font-bold mb-6">Profile Entry</h2>
+      <div className="glass-panel p-8">
+        <h2 className="font-display text-2xl font-semibold mb-6">Profile entry</h2>
         
         <ErrorBanner message={submitError} />
 
@@ -247,19 +247,19 @@ const ProfileForm = () => {
             step="1"
           />
 
-          <div className="mt-8 pt-4 border-t border-color-surface-light">
+          <div className="mt-8 pt-6 border-t border-line">
             <button
               type="submit"
               disabled={!isFormValid() || isSubmitting}
-              className={`w-full py-3 px-4 font-bold rounded-lg transition-colors ${
+              className={`w-full py-3.5 px-4 font-display font-semibold rounded-2xl transition-colors ${
                 !isFormValid() || isSubmitting
-                  ? 'bg-color-surface-light text-color-text-muted cursor-not-allowed'
-                  : 'bg-color-primary text-white hover:bg-color-primary-hover shadow-lg shadow-color-primary/20'
+                  ? 'bg-panel text-muted cursor-not-allowed border-2 border-line'
+                  : 'bg-blue text-blue-ink hover:bg-blue-hover'
               }`}
             >
               {isSubmitting ? (
                 <div className="flex items-center justify-center gap-2">
-                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  <div className="w-5 h-5 border-2 border-blue-ink/30 border-t-blue-ink rounded-full animate-spin"></div>
                   Predicting...
                 </div>
               ) : (

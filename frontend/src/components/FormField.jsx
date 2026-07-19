@@ -5,9 +5,9 @@ const FormField = ({ label, tooltip, type, name, value, onChange, onBlur, error,
   const isCheckbox = type === 'checkbox';
 
   return (
-    <div className="mb-4">
-      <div className="flex items-center mb-1">
-        <label htmlFor={name} className="block text-sm font-medium text-color-text-main">
+    <div className="mb-6">
+      <div className="flex items-center mb-1.5">
+        <label htmlFor={name} className="block text-sm font-medium text-ink">
           {label}
         </label>
         {tooltip && <Tooltip text={tooltip} />}
@@ -22,9 +22,9 @@ const FormField = ({ label, tooltip, type, name, value, onChange, onBlur, error,
             checked={value}
             onChange={onChange}
             onBlur={onBlur}
-            className="w-4 h-4 text-color-primary bg-color-surface border-gray-600 rounded focus:ring-color-primary focus:ring-2"
+            className="w-5 h-5 accent-[#D9CDEF] bg-white border-2 border-line-strong rounded-md focus:ring-blue focus:ring-2"
           />
-          <span className="ml-2 text-sm text-color-text-muted">Yes</span>
+          <span className="ml-2 text-sm text-muted">Yes</span>
         </div>
       ) : (
         <input
@@ -37,12 +37,12 @@ const FormField = ({ label, tooltip, type, name, value, onChange, onBlur, error,
           min={min}
           max={max}
           step={step}
-          className={`w-full px-3 py-2 bg-color-surface border rounded focus:outline-none focus:ring-2 focus:ring-color-primary ${error ? 'border-color-error' : 'border-color-surface-light'}`}
+          className={`w-full px-4 py-2.5 bg-white border-2 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue transition-colors ${error ? 'border-coral' : 'border-line focus:border-blue'}`}
         />
       )}
       
       {error && (
-        <p className="mt-1 text-xs text-color-error">{error}</p>
+        <p className="mt-1 text-xs text-coral font-medium">{error}</p>
       )}
     </div>
   );

@@ -39,3 +39,7 @@ dist-ssr
 # Editor exceptions
 !.vscode/extensions.json
 *.suo
+
+# Credentials & Secrets
+client_secrets.json
+client_secret.json

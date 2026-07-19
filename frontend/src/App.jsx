@@ -36,19 +36,19 @@ const Navigation = () => {
   if (location.pathname === '/') return null;
 
   return (
-    <nav className="bg-color-surface-light/80 backdrop-blur-md sticky top-0 z-50 border-b border-white/5">
+    <nav className="bg-cream/95 backdrop-blur-sm sticky top-0 z-50 border-b-2 border-line">
       <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-        <Link to="/profile" className="font-bold text-lg tracking-tight">Placement Predictions</Link>
+        <Link to="/profile" className="font-display font-semibold text-lg tracking-tight">Placement Predictions</Link>
         <div className="flex items-center gap-6">
-          <Link to="/profile" className={`text-sm font-medium hover:text-color-primary transition-colors ${location.pathname === '/profile' ? 'text-color-primary' : 'text-color-text-muted'}`}>Profile</Link>
+          <Link to="/profile" className={`text-sm font-medium hover:text-blue-ink transition-colors ${location.pathname === '/profile' ? 'text-blue-ink' : 'text-muted'}`}>Profile</Link>
           {!isGuest && (
             <>
-              <Link to="/history" className={`text-sm font-medium hover:text-color-primary transition-colors ${location.pathname === '/history' ? 'text-color-primary' : 'text-color-text-muted'}`}>History</Link>
-              <Link to="/progress" className={`text-sm font-medium hover:text-color-primary transition-colors ${location.pathname === '/progress' ? 'text-color-primary' : 'text-color-text-muted'}`}>Progress</Link>
+              <Link to="/history" className={`text-sm font-medium hover:text-blue-ink transition-colors ${location.pathname === '/history' ? 'text-blue-ink' : 'text-muted'}`}>History</Link>
+              <Link to="/progress" className={`text-sm font-medium hover:text-blue-ink transition-colors ${location.pathname === '/progress' ? 'text-blue-ink' : 'text-muted'}`}>Progress</Link>
             </>
           )}
-          <button onClick={logout} className="text-sm font-medium text-color-error hover:text-red-400 transition-colors ml-4 border border-color-error px-3 py-1 rounded">
-            Sign Out
+          <button onClick={logout} className="text-sm font-medium text-coral hover:bg-coral-bg transition-colors ml-4 border-2 border-coral-line px-3 py-1 rounded-xl">
+            Sign out
           </button>
         </div>
       </div>

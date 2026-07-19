@@ -2,9 +2,9 @@ import React from 'react';
 
 const Disclaimer = () => {
   return (
-    <div className="mt-6 p-4 bg-color-surface-light rounded-lg border border-yellow-500/30 text-sm text-color-text-muted">
+    <div className="mt-6 p-4 bg-yellow/25 rounded-2xl border-2 border-yellow text-sm text-muted text-left">
       <p>
-        <strong className="text-yellow-500">Disclaimer:</strong> This prediction is a probabilistic estimate based on historical data and is intended for self-assessment only. It does not guarantee any actual placement outcome.
+        <strong className="text-yellow-ink font-display">Disclaimer:</strong> This prediction is a probabilistic estimate based on historical data and is intended for self-assessment only. It does not guarantee any actual placement outcome.
       </p>
     </div>
   );

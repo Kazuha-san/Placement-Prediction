@@ -1,5 +1,13 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
+const MOCK_HISTORY = [
+  { id: 'mock-5', created_at: '2025-06-02T10:15:00Z', outcome: true, confidence_score: 0.88, cgpa: 8.7, internships: 2, projects: 5, certifications: 3, aptitude_score: 82, soft_skills_rating: 8, extracurricular_activities: true, placement_training: true, backlogs: 0, limiting_features: {} },
+  { id: 'mock-4', created_at: '2025-05-10T14:30:00Z', outcome: true, confidence_score: 0.74, cgpa: 8.1, internships: 1, projects: 4, certifications: 2, aptitude_score: 71, soft_skills_rating: 7, extracurricular_activities: true, placement_training: true, backlogs: 0, limiting_features: { aptitude_score: 'slightly below peer average' } },
+  { id: 'mock-3', created_at: '2025-04-18T09:00:00Z', outcome: false, confidence_score: 0.52, cgpa: 7.4, internships: 0, projects: 2, certifications: 1, aptitude_score: 58, soft_skills_rating: 6, extracurricular_activities: false, placement_training: true, backlogs: 1, limiting_features: { internships: 'no internships completed yet', backlogs: '1 active backlog' } },
+  { id: 'mock-2', created_at: '2025-03-22T16:45:00Z', outcome: false, confidence_score: 0.41, cgpa: 6.9, internships: 0, projects: 1, certifications: 0, aptitude_score: 49, soft_skills_rating: 5, extracurricular_activities: false, placement_training: false, backlogs: 2, limiting_features: { cgpa: 'below placement threshold', placement_training: 'not yet completed' } },
+  { id: 'mock-1', created_at: '2025-02-05T11:20:00Z', outcome: false, confidence_score: 0.33, cgpa: 6.5, internships: 0, projects: 1, certifications: 0, aptitude_score: 44, soft_skills_rating: 5, extracurricular_activities: false, placement_training: false, backlogs: 2, limiting_features: { cgpa: 'below placement threshold' } },
+];
+
 export const api = {
   predict: async (profileData) => {
     // Note: To support timeouts, we'll implement it in the component or via AbortController here
@@ -42,6 +50,7 @@ export const api = {
 
       return await response.json();
     } catch (error) {
+      if (import.meta.env.DEV) return MOCK_HISTORY;
       throw new Error("couldn't load history, please try again");
     }
   },
@@ -56,6 +65,7 @@ export const api = {
       }
       return await response.json();
     } catch (error) {
+      if (import.meta.env.DEV) return MOCK_HISTORY;
       throw new Error("couldn't load progress, please try again");
     }
   }
