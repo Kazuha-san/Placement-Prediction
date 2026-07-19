@@ -36,7 +36,15 @@ export const AuthProvider = ({ children }) => {
     fetchUser();
   }, []);
 
-  const loginAsGuest = () => {
+  const loginAsGuest = async () => {
+    try {
+      await fetch(`${API_BASE_URL}/auth/guest`, {
+        method: 'POST',
+        credentials: 'include'
+      });
+    } catch (error) {
+      console.error("Failed to login as guest on backend:", error);
+    }
     setIsGuest(true);
     setUser(null);
   };
