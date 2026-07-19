@@ -21,8 +21,6 @@ Thumbs.db
 *.docx
 ~$*.docx
 *BUILD_PLAN.md
-read_docx.py
-generate_mock_model.py
 Scripts/
 
 # Frontend Logs & Specifics
