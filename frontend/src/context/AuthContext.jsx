@@ -53,9 +53,15 @@ export const AuthProvider = ({ children }) => {
     fetchUser();
   };
 
-  const logout = () => {
-    setUser(null);
-    setIsGuest(false);
+  const logout = async () => {
+    try {
+      await fetch(`${API_BASE_URL}/auth/logout`, { method: 'POST', credentials: 'include' });
+    } catch (error) {
+      console.error("Logout request failed:", error);
+    } finally {
+      setUser(null);
+      setIsGuest(false);
+    }
   };
 
   if (loading) {

@@ -3,6 +3,7 @@ import joblib
 import asyncio
 import time
 import logging
+import os
 from fastapi import HTTPException
 from app.core.config import settings
 import numpy as np
@@ -15,7 +16,8 @@ except Exception:
     model = None
 
 try:
-    with open("app/ml/training_ranges.json", "r") as f:
+    training_ranges_path = os.path.join(os.path.dirname(settings.MODEL_PATH), "training_ranges.json")
+    with open(training_ranges_path, "r") as f:
         training_ranges = json.load(f)
 except Exception:
     training_ranges = {}

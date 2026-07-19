@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
@@ -6,7 +6,13 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const { loginAsGuest, loginAsDevUser } = useAuth();
+  const { user, isGuest, loginAsGuest, loginAsDevUser } = useAuth();
+
+  useEffect(() => {
+    if (user || isGuest) {
+      navigate('/profile', { replace: true });
+    }
+  }, [user, isGuest, navigate]);
 
   const handleGoogleLogin = () => {
     // Redirect to backend OAuth endpoint
