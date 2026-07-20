@@ -1,110 +1,64 @@
-**Software Requirements Specification**
+# Software Requirements Specification (SRS)
 
-*for*
+**Project Name:** Placement Predictions (An AI-Based Placement Prediction System)  
+**Document Standard:** IEEE Std 830-1998  
+**Version:** 1.0  
+**Date:** June 28, 2026  
 
-**Placement Predictions: An AI-Based Placement Prediction System**
+---
 
-*IEEE Std 830-1998 Format*
+### Prepared By:
+**Sagar Shrivastava** (Enrollment No: 0126AL241104)  
+*Department of Artificial Intelligence and Machine Learning*  
+*Oriental College of Technology, Bhopal*  
 
-Version 1.0
+---
 
-**Prepared by:**
+# Table of Contents
 
-Sagar Shrivastava
+- **1. Introduction**
+  - 1.1 Purpose
+  - 1.2 Scope
+  - 1.3 Definitions, Acronyms, and Abbreviations
+  - 1.4 References
+  - 1.5 Overview
+- **2. Overall Description**
+  - 2.1 Product Perspective
+  - 2.2 Product Functions
+  - 2.3 User Classes and Characteristics
+  - 2.4 Operating Environment
+  - 2.5 Design and Implementation Constraints
+  - 2.6 Assumptions and Dependencies
+- **3. Specific Requirements**
+  - 3.1 External Interface Requirements
+    - 3.1.1 User Interface
+    - 3.1.2 Hardware Interfaces
+    - 3.1.3 Software Interfaces
+    - 3.1.4 Communications Interfaces
+  - 3.2 Functional Requirements
+    - 3.2.1 User Authentication Module
+    - 3.2.2 Profile Entry Module
+    - 3.2.3 Placement Prediction Module
+    - 3.2.4 Prediction History Module
+    - 3.2.5 Use Cases
+  - 3.3 Performance Requirements
+    - 3.3.1 Response Time
+    - 3.3.2 Throughput and Capacity
+    - 3.3.3 Model Inference Performance
+  - 3.4 Design Constraints
+  - 3.5 Software System Attributes
+    - 3.5.1 Reliability
+    - 3.5.2 Availability
+    - 3.5.3 Security
+    - 3.5.4 Maintainability
+    - 3.5.5 Usability
+  - 3.6 AI/ML
+    - 3.6.1 Model Specification
+    - 3.6.2 Data Management
+    - 3.6.3 Guardrails
+    - 3.6.4 Ethics
+    - 3.6.5 Model Lifecycle and Operations
 
-(0126AL241104)
-
-Department of Artificial Intelligence and Machine Learning
-
-Oriental College of Technology, Bhopal
-
-Date: 28 June 2026
-
-Revision History
-
-1. Introduction
-
-1.1 Purpose
-
-1.2 Scope
-
-1.3 Definitions, Acronyms, and Abbreviations
-
-1.4 References
-
-1.5 Overview
-
-2. Overall Description
-
-2.1 Product Perspective
-
-2.2 Product Functions
-
-2.3 User Classes and Characteristics
-
-2.4 Operating Environment
-
-2.5 Design and Implementation Constraints
-
-2.6 Assumptions and Dependencies
-
-3. Specific Requirements
-
-3.1 External Interface Requirements
-
-3.1.1 User Interface
-
-3.1.2 Hardware Interfaces
-
-3.1.3 Software Interfaces
-
-3.1.4 Communications Interfaces
-
-3.2 Functional Requirements
-
-3.2.1 User Authentication Module
-
-3.2.2 Profile Entry Module
-
-3.2.3 Placement Prediction Module
-
-3.2.4 Prediction History Module
-
-3.2.5 Use Cases
-
-3.3 Performance Requirements
-
-3.3.1 Response Time
-
-3.3.2 Throughput and Capacity
-
-3.3.3 Model Inference Performance
-
-3.4 Design Constraints
-
-3.5 Software System Attributes
-
-3.5.1 Reliability
-
-3.5.2 Availability
-
-3.5.3 Security
-
-3.5.4 Maintainability
-
-3.5.5 Usability
-
-3.6 AI/ML
-
-3.6.1 Model Specification
-
-3.6.2 Data Management
-
-3.6.3 Guardrails
-
-3.6.4 Ethics
-
-3.6.5 Model Lifecycle and Operations
 
 ## Revision History
 
@@ -147,8 +101,6 @@ This system acts as a decision support tool used only for self-assessment by the
 - Karl E. Wiegers, Software Requirements, 3rd Edition, Microsoft Press.
 
 - scikit-learn documentation, https://scikit-learn.org/stable/documentation.html
-
-- Kumbhar, R. (2025). Placement Prediction Dataset. Kaggle. https://www.kaggle.com/datasets/ruchikakumbhar/placement-prediction-dataset
 
 ## 1.5 Overview
 
