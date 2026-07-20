@@ -1,4 +1,4 @@
-from typing import Generator, Optional
+from typing import Optional
 from fastapi import Depends, HTTPException, status, Request
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError

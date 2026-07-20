@@ -22,6 +22,16 @@ try:
 except Exception:
     training_ranges = {}
 
+SCHEMA_MAPPING = {
+    "workshops_certifications": "certifications",
+    "aptitude_test_score": "aptitude_score",
+    "active_backlog_count": "backlogs"
+}
+
+GRACE = 0.15  # ignore anything within 15% of the range width past the boundary
+PENALTY_SLOPE = 0.05
+PENALTY_CAP_PER_FIELD = 0.15
+
 def compute_penalty(value: float, feature_name: str) -> float:
     if feature_name not in training_ranges:
         return 0.0
@@ -40,26 +50,20 @@ def compute_penalty(value: float, feature_name: str) -> float:
     else:
         return 0.0
         
-    # Scale by e.g. 0.1 per width unit, capped at 0.3
-    penalty = min(dist * 0.1, 0.3)
-    return penalty
+    if dist <= GRACE:
+        return 0.0
+        
+    return min((dist - GRACE) * PENALTY_SLOPE, PENALTY_CAP_PER_FIELD)
 
 async def predict(profile_data: dict) -> tuple[bool, float, dict]:
     if model is None:
         raise HTTPException(status_code=503, detail="Prediction service unavailable: Model not loaded")
         
     def do_predict():
-        # Map model feature names to API schema names
-        schema_mapping = {
-            "workshops_certifications": "certifications",
-            "aptitude_test_score": "aptitude_score",
-            "active_backlog_count": "backlogs"
-        }
-
         # Feature order based on feature_schema.py
         features = []
         for feat in FEATURE_NAMES:
-            schema_key = schema_mapping.get(feat, feat)
+            schema_key = SCHEMA_MAPPING.get(feat, feat)
             if feat in ["extracurricular_activities", "placement_training"]:
                 features.append(1 if profile_data.get(schema_key) else 0)
             else:
@@ -102,16 +106,23 @@ async def predict(profile_data: dict) -> tuple[bool, float, dict]:
         raise HTTPException(status_code=503, detail=f"Prediction service unavailable: {str(e)}")
 
     # Apply Out-of-Training-Range Confidence Penalty
-    cgpa_val = profile_data.get("cgpa", 0)
-    aptitude_val = profile_data.get("aptitude_score", 0)
+    total_penalty = 0.0
+    out_of_range_fields = []
     
-    # note that the feature name in training_ranges is 'aptitude_test_score' but the schema is 'aptitude_score'
-    cgpa_penalty = compute_penalty(cgpa_val, "cgpa")
-    aptitude_penalty = compute_penalty(aptitude_val, "aptitude_test_score")
+    # Check all numeric features (exclude booleans)
+    numeric_features = [f for f in FEATURE_NAMES if f not in ["extracurricular_activities", "placement_training"]]
     
-    total_penalty = min(cgpa_penalty + aptitude_penalty, 0.5) # Cap total penalty
+    for feat in numeric_features:
+        schema_key = SCHEMA_MAPPING.get(feat, feat)
+        val = profile_data.get(schema_key, 0)
+        penalty = compute_penalty(val, feat)
+        if penalty > 0:
+            out_of_range_fields.append(schema_key)
+            total_penalty += penalty
+            
+    total_penalty = min(total_penalty, 0.5) # Cap total penalty
     
     # Adjust confidence, keep in [0, 1]
     confidence = max(0.0, confidence - total_penalty)
     
-    return outcome, confidence, limiting_features
+    return outcome, confidence, limiting_features, out_of_range_fields

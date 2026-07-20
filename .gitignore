@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 .venv/
 .env
+trained_model/
 
 # Node / Frontend
 node_modules/

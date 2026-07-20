@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import FormField from '../components/FormField';
+import RangeSlider from '../components/RangeSlider';
 import { api } from '../services/api';
 import ErrorBanner from '../components/ErrorBanner';
 
 const initialFormData = {
-  cgpa: '',
+  cgpa: '7.8',
   internships: '',
   projects: '',
   certifications: '',
-  aptitude_score: '',
-  soft_skills_rating: '',
+  aptitude_score: '75',
+  soft_skills_rating: '3.9',
   extracurricular_activities: false,
   placement_training: false,
   backlogs: ''
@@ -33,9 +34,6 @@ const ProfileForm = () => {
     const numValue = Number(value);
 
     switch (name) {
-      case 'cgpa':
-        if (numValue < 0 || numValue > 10) error = 'CGPA must be between 0 and 10';
-        break;
       case 'internships':
         if (numValue < 0 || !Number.isInteger(numValue)) error = 'Must be a valid number >= 0';
         break;
@@ -44,12 +42,6 @@ const ProfileForm = () => {
         break;
       case 'certifications':
         if (numValue < 0 || !Number.isInteger(numValue)) error = 'Must be a valid number >= 0';
-        break;
-      case 'aptitude_score':
-        if (numValue < 0 || numValue > 100) error = 'Aptitude score must be between 0 and 100';
-        break;
-      case 'soft_skills_rating':
-        if (numValue < 0 || numValue > 10) error = 'Soft skills rating must be between 0 and 10';
         break;
       case 'backlogs':
         if (numValue < 0 || !Number.isInteger(numValue)) error = 'Must be a valid number >= 0';
@@ -141,18 +133,18 @@ const ProfileForm = () => {
         <ErrorBanner message={submitError} />
 
         <form onSubmit={handleSubmit}>
-          <FormField
+          <RangeSlider
             label="CGPA"
-            tooltip="Your Cumulative Grade Point Average (0-10 scale)"
-            type="number"
+            tooltip="Your Cumulative Grade Point Average"
             name="cgpa"
             value={formData.cgpa}
             onChange={handleChange}
             onBlur={handleBlur}
-            error={touched.cgpa && errors.cgpa}
             min="0"
             max="10"
             step="0.01"
+            typicalMin="6.5"
+            typicalMax="9.1"
           />
           <FormField
             label="Number of Internships"
@@ -190,31 +182,31 @@ const ProfileForm = () => {
             min="0"
             step="1"
           />
-          <FormField
+          <RangeSlider
             label="Aptitude Test Score"
-            tooltip="Score from your recent aptitude test (0-100)"
-            type="number"
+            tooltip="Score from your recent aptitude test"
             name="aptitude_score"
             value={formData.aptitude_score}
             onChange={handleChange}
             onBlur={handleBlur}
-            error={touched.aptitude_score && errors.aptitude_score}
             min="0"
             max="100"
             step="0.1"
+            typicalMin="60"
+            typicalMax="90"
           />
-          <FormField
+          <RangeSlider
             label="Soft Skills Rating"
-            tooltip="Self-evaluated or institutional rating (0-10)"
-            type="number"
+            tooltip="Institutional or self-evaluated rating"
             name="soft_skills_rating"
             value={formData.soft_skills_rating}
             onChange={handleChange}
             onBlur={handleBlur}
-            error={touched.soft_skills_rating && errors.soft_skills_rating}
             min="0"
             max="10"
             step="0.1"
+            typicalMin="3.0"
+            typicalMax="4.8"
           />
           <FormField
             label="Extracurricular Activities"

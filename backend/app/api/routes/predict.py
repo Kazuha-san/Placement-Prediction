@@ -24,7 +24,7 @@ async def create_prediction(
     profile_data = profile_in.model_dump()
     
     # Get prediction
-    outcome, confidence, limiting_features = await predict(profile_data)
+    outcome, confidence, limiting_features, out_of_range_fields = await predict(profile_data)
     
     if current_user:
         # Save Profile
@@ -38,7 +38,8 @@ async def create_prediction(
             user_id=current_user.id,
             outcome=outcome,
             confidence_score=confidence,
-            limiting_features=limiting_features
+            limiting_features=limiting_features,
+            out_of_range_fields=out_of_range_fields
         )
         db.add(db_prediction)
         await db.commit()
@@ -51,6 +52,7 @@ async def create_prediction(
             outcome=db_prediction.outcome,
             confidence_score=db_prediction.confidence_score,
             limiting_features=db_prediction.limiting_features,
+            out_of_range_fields=db_prediction.out_of_range_fields,
             created_at=db_prediction.created_at,
             disclaimer=DISCLAIMER_TEXT
         )
@@ -66,6 +68,7 @@ async def create_prediction(
             outcome=outcome,
             confidence_score=confidence,
             limiting_features=limiting_features,
+            out_of_range_fields=out_of_range_fields,
             created_at=datetime.utcnow(),
             disclaimer=DISCLAIMER_TEXT
         )

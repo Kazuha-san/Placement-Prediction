@@ -1,0 +1,35 @@
+{
+  "model_version": "2.0.0",
+  "trained_on": "2026-07-20",
+  "algorithm": "RandomForestClassifier",
+  "dataset_version": "synthetic_v1_50000",
+  "feature_columns": [
+    "cgpa",
+    "internships",
+    "projects",
+    "workshops_certifications",
+    "aptitude_test_score",
+    "soft_skills_rating",
+    "extracurricular_activities",
+    "placement_training",
+    "active_backlog_count"
+  ],
+  "hyperparameters": {
+    "n_estimators": 400,
+    "min_samples_split": 15,
+    "min_samples_leaf": 1,
+    "max_features": "sqrt",
+    "max_depth": 12,
+    "class_weight": null
+  },
+  "metrics": {
+    "test_accuracy": 0.8081,
+    "test_precision": 0.8108,
+    "test_recall": 0.8002,
+    "test_f1": 0.8054,
+    "test_roc_auc": 0.8927,
+    "cv_accuracy_mean": 0.8109,
+    "train_accuracy": 0.8744
+  },
+  "meets_srs_accuracy_requirement": true
+}

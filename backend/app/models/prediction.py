@@ -13,4 +13,5 @@ class Prediction(Base):
     outcome = Column(Boolean, nullable=False)
     confidence_score = Column(Float, nullable=False)
     limiting_features = Column(JSONB, nullable=False)
+    out_of_range_fields = Column(JSONB, nullable=False, default=list)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)

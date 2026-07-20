@@ -9,6 +9,7 @@ class PredictionCreate(BaseModel):
     outcome: bool
     confidence_score: float
     limiting_features: dict[str, Any]
+    out_of_range_fields: list[str] = []
 
 class PredictionResponse(PredictionCreate):
     id: UUID
