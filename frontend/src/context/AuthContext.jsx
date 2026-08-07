@@ -16,12 +16,16 @@ export const AuthProvider = ({ children }) => {
       if (response.ok) {
         const data = await response.json();
         if (data.user) {
-          setUser(data.user);
+          setUser({
+            id: data.user.id,
+            name: data.user.name,
+            email: data.user.email,
+            created_at: data.user.created_at,
+            semester: data.user.semester,
+            year: data.user.year
+          });
           setIsGuest(false);
         } else if (data.is_guest) {
-          // If they were a guest, maybe they keep guest state? But guest is typically client-side only here.
-          // The backend returns is_guest=True if there's no user.
-          // Let's just reset if no user.
           setUser(null);
         }
       }
@@ -30,6 +34,11 @@ export const AuthProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const refreshUser = async () => {
+    setLoading(true);
+    await fetchUser();
   };
 
   useEffect(() => {
@@ -69,7 +78,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ user, isGuest, loginAsGuest, loginAsDevUser, loginSuccess, logout }}>
+    <AuthContext.Provider value={{ user, isGuest, loginAsGuest, loginAsDevUser, loginSuccess, logout, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );

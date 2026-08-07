@@ -10,7 +10,7 @@ const YEARS = [1, 2, 3, 4];
  * { displayName, semester, year } — wire this to whatever profile-update
  * call your backend exposes (see SETUP.md).
  */
-const OnboardingModal = ({ onComplete }) => {
+const OnboardingModal = ({ onComplete, error }) => {
   const [displayName, setDisplayName] = useState('');
   const [semester, setSemester] = useState('');
   const [year, setYear] = useState('');
@@ -35,6 +35,11 @@ const OnboardingModal = ({ onComplete }) => {
           <p className="text-sm text-muted max-w-xs">
             Just a couple of details so your predictions make sense at a glance.
           </p>
+          {error && (
+            <p className="mt-2 text-xs text-danger font-medium">
+              {error}
+            </p>
+          )}
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">

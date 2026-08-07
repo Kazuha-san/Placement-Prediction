@@ -15,7 +15,7 @@ export const api = {
     const timeoutId = setTimeout(() => controller.abort(), 10000); // Wait up to 10s for the network, though NFR specifies 2s for backend response.
 
     try {
-      const response = await fetch(`${API_BASE_URL}/predict`, {
+      const response = await fetch(`${API_BASE_URL}/predict/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -40,7 +40,7 @@ export const api = {
 
   getHistory: async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/history`, {
+      const response = await fetch(`${API_BASE_URL}/history/`, {
         credentials: 'include'
       });
 
@@ -57,7 +57,7 @@ export const api = {
 
   getProgress: async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/progress`, {
+      const response = await fetch(`${API_BASE_URL}/progress/`, {
         credentials: 'include'
       });
       if (!response.ok) {
@@ -67,6 +67,42 @@ export const api = {
     } catch (error) {
       if (import.meta.env.DEV) return MOCK_HISTORY;
       throw new Error("couldn't load progress, please try again");
+    }
+  },
+
+  updateProfile: async (data) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/me`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error('Failed to update profile');
+      }
+      const result = await response.json();
+      return result.user;
+    } catch (error) {
+      throw new Error('Failed to update profile');
+    }
+  },
+
+  deleteAccount: async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/me`, {
+        method: 'DELETE',
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error('Failed to delete account');
+      }
+      const result = await response.json();
+      return result.success;
+    } catch (error) {
+      throw new Error('Failed to delete account');
     }
   }
 };

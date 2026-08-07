@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
+import { api } from '../services/api';
 import { User, Palette, ShieldAlert, Sun, Moon, Check } from 'lucide-react';
 import BackButton from '../components/BackButton';
 
@@ -15,17 +16,25 @@ const SectionHeading = ({ icon: Icon, title, subtitle }) => (
 );
 
 const Settings = () => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const { theme, setTheme } = useTheme();
   const [displayName, setDisplayName] = useState(user?.name || '');
   const [saved, setSaved] = useState(false);
+  const [error, setError] = useState(null);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const [deleteError, setDeleteError] = useState(null);
 
-  const handleSaveName = (e) => {
+  const handleSaveName = async (e) => {
     e.preventDefault();
-    // Wire this to your account-update endpoint — see SETUP.md.
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
+    setError(null);
+    setSaved(false);
+    try {
+      await api.updateProfile({ display_name: displayName.trim() });
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
+    } catch (err) {
+      setError(err.message || 'Failed to save name');
+    }
   };
 
   return (
@@ -47,13 +56,17 @@ const Settings = () => {
               type="text"
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
-              className="flex-1 px-4 py-2.5 bg-card border-2 border-line rounded-2xl focus:outline-none
-                focus:ring-2 focus:ring-[var(--color-primary-to)] focus:border-transparent transition-colors"
+              className={`flex-1 px-4 py-2.5 bg-card border-2 rounded-2xl focus:outline-none
+                focus:ring-2 focus:ring-[var(--color-primary-to)] focus:border-transparent transition-colors
+                ${error ? 'border-danger' : 'border-line focus:border-transparent'}`}
             />
             <button type="submit" className="btn-primary px-5 font-medium text-sm shrink-0 flex items-center gap-1.5">
               {saved ? <><Check size={16} /> Saved</> : 'Save'}
             </button>
           </div>
+          {error && (
+            <p className="mt-1 text-xs text-danger font-medium">{error}</p>
+          )}
         </form>
 
         <div className="grid grid-cols-2 gap-4 pt-5 border-t border-line">
@@ -117,17 +130,31 @@ const Settings = () => {
             <button
               className="px-5 py-2.5 rounded-pill text-sm font-semibold text-white"
               style={{ background: 'var(--color-danger)' }}
-              // Wire to your account-deletion endpoint — see SETUP.md
+              onClick={async () => {
+                try {
+                  await api.deleteAccount();
+                  await logout();
+                  window.location.href = '/';
+                } catch (err) {
+                  setDeleteError(err.message || 'Failed to delete account');
+                }
+              }}
             >
               Yes, permanently delete
             </button>
             <button
-              onClick={() => setConfirmingDelete(false)}
+              onClick={() => {
+                setConfirmingDelete(false);
+                setDeleteError(null);
+              }}
               className="btn-secondary px-5 py-2.5 text-sm font-medium"
             >
               Cancel
             </button>
           </div>
+        )}
+        {deleteError && (
+          <p className="mt-3 text-xs text-danger font-medium">{deleteError}</p>
         )}
       </section>
     </div>

@@ -11,6 +11,7 @@ import Settings from './pages/Settings';
 import Drawer from './components/Drawer';
 import OnboardingModal from './components/OnboardingModal';
 import { Menu } from 'lucide-react';
+import { api } from './services/api';
 
 const ProtectedRoute = ({ children }) => {
   const { user, isGuest } = useAuth();
@@ -92,16 +93,28 @@ const TopBar = () => {
 };
 
 const AppContent = () => {
-  const { user, isGuest } = useAuth();
+  const { user, isGuest, refreshUser } = useAuth();
   // A brand-new authenticated user (no display name set yet) sees the
   // onboarding popup once, before anything else. Swap `needsOnboarding`
   // for your backend's real signal (see SETUP.md).
   const needsOnboarding = user && !isGuest && !user.name;
   const [onboardingDone, setOnboardingDone] = useState(false);
+  const [onboardingError, setOnboardingError] = useState(null);
 
-  const handleOnboardingComplete = (profile) => {
-    // TODO (coding agent): POST `profile` to your account-update endpoint.
-    setOnboardingDone(true);
+  const handleOnboardingComplete = async (profile) => {
+    try {
+      await api.updateProfile({
+        display_name: profile.displayName,
+        semester: profile.semester,
+        year: profile.year
+      });
+      await refreshUser();
+      setOnboardingDone(true);
+      setOnboardingError(null);
+    } catch (error) {
+      console.error("Failed to update profile:", error);
+      setOnboardingError(error.message || 'Failed to update profile');
+    }
   };
 
   return (
@@ -121,7 +134,7 @@ const AppContent = () => {
       </main>
 
       {needsOnboarding && !onboardingDone && (
-        <OnboardingModal onComplete={handleOnboardingComplete} />
+        <OnboardingModal onComplete={handleOnboardingComplete} error={onboardingError} />
       )}
     </>
   );
