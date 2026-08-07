@@ -1,55 +1,175 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { ArrowRight, Sparkles, ShieldCheck, LineChart, ClipboardList, GraduationCap } from 'lucide-react';
 
 const Landing = () => {
   const { user, isGuest } = useAuth();
   const navigate = useNavigate();
 
+  // Guests and authenticated users see the same Landing page —
+  // no auto-redirect. They choose "Get started" like anyone else.
   useEffect(() => {
-    if (user || isGuest) {
+    if (user) {
+      // Only fully authenticated users skip straight past the marketing page.
       navigate('/profile', { replace: true });
     }
-  }, [user, isGuest, navigate]);
+  }, [user, navigate]);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">
-      {/* Subtle floating background elements via tailwind classes or inline styles */}
-      <div 
-        className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue/10 rounded-full blur-3xl"
-        style={{ animation: 'float 8s ease-in-out infinite' }}
-      ></div>
-      <div 
-        className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink/10 rounded-full blur-3xl"
-        style={{ animation: 'float 10s ease-in-out infinite reverse' }}
-      ></div>
+    <div className="page-enter">
+      {/* ---------- HERO ---------- */}
+      <section className="relative overflow-hidden">
+        <div className="hero-wash absolute inset-0" />
 
-      <div className="z-10 flex flex-col items-center text-center animate-[fadeIn_1s_ease-out]">
-        <h1 className="font-display text-5xl md:text-6xl font-bold mb-6 text-ink tracking-tight">
-          Placement Predictions
-        </h1>
-        <p className="text-lg md:text-xl text-muted mb-10 max-w-2xl">
-          Get a rough estimate of your placement odds before the season starts.
-        </p>
-        <button
-          onClick={() => navigate('/signin')}
-          className="py-4 px-8 bg-blue text-blue-ink font-semibold rounded-2xl hover:bg-blue-hover transition-colors shadow-lg hover:shadow-xl text-lg flex items-center gap-2 group"
-        >
-          Get Started
-          <span className="group-hover:translate-x-1 transition-transform">→</span>
-        </button>
-      </div>
+        {/* Layered diagonal panels — echoes the reference's faceted, angular light bands
+            rather than a soft blurred blob. Each panel is a hard-edged clipped shard at
+            a shared angle, alternating warm/cool tints and opacities for depth. */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+          <div className="absolute inset-0" style={{
+            clipPath: 'polygon(0% 0%, 22% 0%, 8% 100%, 0% 100%)',
+            background: 'linear-gradient(180deg, rgba(255,255,255,0.35), rgba(255,255,255,0.05))',
+          }} />
+          <div className="absolute inset-0" style={{
+            clipPath: 'polygon(26% 0%, 40% 0%, 26% 100%, 12% 100%)',
+            background: 'linear-gradient(180deg, rgba(255,255,255,0.22), rgba(255,255,255,0))',
+          }} />
+          <div className="absolute inset-0" style={{
+            clipPath: 'polygon(46% 0%, 62% 0%, 48% 100%, 32% 100%)',
+            background: 'linear-gradient(180deg, rgba(255,255,255,0.4), rgba(255,255,255,0.05))',
+          }} />
+          <div className="absolute inset-0" style={{
+            clipPath: 'polygon(68% 0%, 80% 0%, 66% 100%, 54% 100%)',
+            background: 'linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0))',
+          }} />
+          <div className="absolute inset-0" style={{
+            clipPath: 'polygon(86% 0%, 100% 0%, 92% 100%, 78% 100%)',
+            background: 'linear-gradient(180deg, rgba(255,255,255,0.3), rgba(255,255,255,0.05))',
+          }} />
+        </div>
 
-      <style>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0) scale(1); }
-          50% { transform: translateY(-20px) scale(1.05); }
-        }
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
+        <nav className="relative z-10 max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
+          <span className="font-display font-semibold text-lg tracking-tight text-ink">
+            Placement Predictions
+          </span>
+          <button
+            onClick={() => navigate('/signin')}
+            className="btn-secondary text-sm font-medium px-5 py-2"
+          >
+            Sign in
+          </button>
+        </nav>
+
+        <div className="relative z-10 max-w-4xl mx-auto px-6 pt-20 pb-28 text-center flex flex-col items-center">
+          <span className="chip text-xs font-semibold tracking-wide uppercase px-4 py-1.5 mb-6 inline-flex items-center gap-1.5">
+            <Sparkles size={14} /> Know where you stand
+          </span>
+          <h1 className="font-display text-5xl md:text-7xl font-semibold text-ink tracking-tight leading-[1.05] mb-6">
+            Placement Predictions
+          </h1>
+          <p className="text-lg md:text-xl text-muted max-w-xl mb-10">
+            A quick, honest read on your placement odds — based on your own
+            academics, projects and skills. No guesswork, just a clear starting point.
+          </p>
+          <button
+            onClick={() => navigate('/signin')}
+            className="btn-primary font-semibold text-lg px-8 py-4 flex items-center gap-2 group"
+          >
+            Get started
+            <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+          </button>
+        </div>
+      </section>
+
+      {/* ---------- ABOUT ---------- */}
+      <section className="max-w-5xl mx-auto px-6 py-24">
+        <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div>
+            <h2 className="font-display text-3xl md:text-4xl font-semibold text-ink mb-4">
+              What this actually is
+            </h2>
+            <p className="text-muted text-lg leading-relaxed">
+              You enter the things that matter — your CGPA, internships,
+              projects, aptitude score and a few more — and get back a
+              confidence read on your placement chances, plus the factors
+              pulling it up or down. It's a mirror, not a verdict.
+            </p>
+          </div>
+          <div className="surface-card p-8 flex flex-col gap-5">
+            <div className="flex items-start gap-4">
+              <div className="chip p-2.5 shrink-0"><ClipboardList size={20} /></div>
+              <div>
+                <p className="font-semibold text-ink">A short form</p>
+                <p className="text-sm text-muted">Nine fields, about two minutes.</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-4">
+              <div className="chip p-2.5 shrink-0"><LineChart size={20} /></div>
+              <div>
+                <p className="font-semibold text-ink">A clear result</p>
+                <p className="text-sm text-muted">Confidence score and the factors behind it.</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-4">
+              <div className="chip p-2.5 shrink-0"><ShieldCheck size={20} /></div>
+              <div>
+                <p className="font-semibold text-ink">Yours to keep</p>
+                <p className="text-sm text-muted">Sign in and every attempt is tracked over time.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------- HOW IT WORKS ---------- */}
+      <section className="relative py-24">
+        <div className="absolute inset-0 bg-panel" />
+        <div className="relative max-w-5xl mx-auto px-6">
+          <h2 className="font-display text-3xl md:text-4xl font-semibold text-ink mb-12 text-center">
+            How it works
+          </h2>
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              { step: '1', title: 'Fill in your details', body: 'Academics, experience and skills — entered once, in a form that isn\u2019t intimidating.' },
+              { step: '2', title: 'Get your prediction', body: 'A confidence score and the specific factors shaping it, right away.' },
+              { step: '3', title: 'Track your progress', body: 'Sign in to save every attempt and watch your confidence trend over time.' },
+            ].map((s) => (
+              <div key={s.step} className="surface-card p-6">
+                <span className="font-display text-3xl font-semibold text-muted/50">{s.step}</span>
+                <h3 className="font-display text-xl font-semibold text-ink mt-2 mb-2">{s.title}</h3>
+                <p className="text-sm text-muted leading-relaxed">{s.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ---------- WHY IT HELPS (third section) ---------- */}
+      <section className="max-w-5xl mx-auto px-6 py-24">
+        <div className="surface-card p-10 md:p-14 flex flex-col md:flex-row items-center gap-10">
+          <div className="chip p-5 shrink-0">
+            <GraduationCap size={36} />
+          </div>
+          <div>
+            <h2 className="font-display text-2xl md:text-3xl font-semibold text-ink mb-3">
+              Built for the run-up to placement season
+            </h2>
+            <p className="text-muted leading-relaxed">
+              Most students only find out where they stand when it's too late
+              to change it. This gives you that read early — so a low score on
+              aptitude or a missing internship is something you can still act on,
+              not just something you find out about afterwards.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <footer className="border-t border-line py-10">
+        <div className="max-w-5xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <span className="font-display font-semibold text-ink">Placement Predictions</span>
+          <span className="text-sm text-muted">Estimates only — not a guarantee of outcome.</span>
+        </div>
+      </footer>
     </div>
   );
 };

@@ -1,20 +1,23 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import FormField from '../components/FormField';
 import RangeSlider from '../components/RangeSlider';
-import { api } from '../services/api';
+import StepperField from '../components/StepperField';
+import NumberField from '../components/NumberField';
+import ToggleField from '../components/ToggleField';
 import ErrorBanner from '../components/ErrorBanner';
+import { api } from '../services/api';
+import { ClipboardCheck } from 'lucide-react';
 
 const initialFormData = {
-  cgpa: '7.8',
-  internships: '',
+  cgpa: '7.80',
+  internships: 2,
   projects: '',
   certifications: '',
   aptitude_score: '75',
-  soft_skills_rating: '3.9',
+  soft_skills_rating: '5.0',
   extracurricular_activities: false,
   placement_training: false,
-  backlogs: ''
+  backlogs: 1,
 };
 
 const ProfileForm = () => {
@@ -26,82 +29,42 @@ const ProfileForm = () => {
   const [submitError, setSubmitError] = useState(null);
 
   const validateField = (name, value) => {
-    let error = null;
-    if (value === '' && typeof value !== 'boolean') {
+    if ((name === 'projects' || name === 'certifications') && value === '') {
       return 'This field is required';
     }
-
-    const numValue = Number(value);
-
-    switch (name) {
-      case 'internships':
-        if (numValue < 0 || !Number.isInteger(numValue)) error = 'Must be a valid number >= 0';
-        break;
-      case 'projects':
-        if (numValue < 0 || !Number.isInteger(numValue)) error = 'Must be a valid number >= 0';
-        break;
-      case 'certifications':
-        if (numValue < 0 || !Number.isInteger(numValue)) error = 'Must be a valid number >= 0';
-        break;
-      case 'backlogs':
-        if (numValue < 0 || !Number.isInteger(numValue)) error = 'Must be a valid number >= 0';
-        break;
-      default:
-        break;
-    }
-    return error;
+    return null;
   };
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     const val = type === 'checkbox' ? checked : value;
-    
-    setFormData(prev => ({ ...prev, [name]: val }));
-    
+    setFormData((prev) => ({ ...prev, [name]: val }));
     if (touched[name]) {
-      const error = validateField(name, val);
-      setErrors(prev => ({ ...prev, [name]: error }));
+      setErrors((prev) => ({ ...prev, [name]: validateField(name, val) }));
     }
   };
 
   const handleBlur = (e) => {
     const { name, value, type, checked } = e.target;
     const val = type === 'checkbox' ? checked : value;
-    
-    setTouched(prev => ({ ...prev, [name]: true }));
-    const error = validateField(name, val);
-    setErrors(prev => ({ ...prev, [name]: error }));
+    setTouched((prev) => ({ ...prev, [name]: true }));
+    setErrors((prev) => ({ ...prev, [name]: validateField(name, val) }));
   };
 
   const isFormValid = () => {
-    const newErrors = {};
-    let valid = true;
-    
-    Object.keys(formData).forEach(key => {
-      const error = validateField(key, formData[key]);
-      if (error) {
-        newErrors[key] = error;
-        valid = false;
-      }
-    });
-    
-    return valid && Object.values(errors).every(e => e === null);
+    return !validateField('projects', formData.projects) && !validateField('certifications', formData.certifications);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitError(null);
-    
-    // Set touched for all to show validation immediately if not valid
-    const allTouched = Object.keys(formData).reduce((acc, key) => ({...acc, [key]: true}), {});
-    setTouched(allTouched);
+    setTouched({ projects: true, certifications: true });
 
-    if (!isFormValid()) {
-      return;
-    }
+    if (!isFormValid()) return;
 
     setIsSubmitting(true);
-    
+
+    // Stepper fields store "10" to represent the capped "10+" option — submit as-is.
     const payload = {
       cgpa: Number(formData.cgpa),
       internships: Number(formData.internships),
@@ -117,145 +80,97 @@ const ProfileForm = () => {
     try {
       const result = await api.predict(payload);
       setIsSubmitting(false);
-      // Pass the result via state to the result page
       navigate('/result', { state: { result } });
     } catch (err) {
       setIsSubmitting(false);
-      setSubmitError(err.message || 'service unavailable, please try again');
+      setSubmitError(err.message || 'Service unavailable, please try again');
     }
   };
 
   return (
-    <div className="max-w-2xl mx-auto py-8 px-4">
-      <div className="glass-panel p-8">
-        <h2 className="font-display text-2xl font-semibold mb-6">Profile entry</h2>
-        
-        <ErrorBanner message={submitError} />
+    <div className="max-w-2xl mx-auto py-10 px-4 page-enter">
+      <div className="surface-card p-6 md:p-9">
+        <div className="flex items-center gap-3 mb-1">
+          <div className="chip p-2.5"><ClipboardCheck size={20} /></div>
+          <h1 className="font-display text-2xl font-semibold text-ink">Your details</h1>
+        </div>
+        <p className="text-sm text-muted mb-7 ml-[52px] -mt-1">Takes about two minutes.</p>
 
         <form onSubmit={handleSubmit}>
           <RangeSlider
-            label="CGPA"
-            tooltip="Your Cumulative Grade Point Average"
-            name="cgpa"
-            value={formData.cgpa}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            min="0"
-            max="10"
-            step="0.01"
-            typicalMin="6.5"
-            typicalMax="9.1"
+            label="CGPA" tooltip="Your current cumulative grade point average"
+            name="cgpa" value={formData.cgpa} onChange={handleChange} onBlur={handleBlur}
+            min="0" max="10" step="0.01"
           />
-          <FormField
-            label="Number of Internships"
-            tooltip="Total completed internships"
-            type="number"
-            name="internships"
-            value={formData.internships}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            error={touched.internships && errors.internships}
-            min="0"
-            step="1"
+
+          <StepperField
+            label="Number of internships" tooltip="Total internships completed so far"
+            name="internships" value={formData.internships} onChange={handleChange} onBlur={handleBlur}
+            min={0} max={10}
           />
-          <FormField
-            label="Number of Projects"
-            tooltip="Total completed academic or personal projects"
-            type="number"
-            name="projects"
-            value={formData.projects}
-            onChange={handleChange}
-            onBlur={handleBlur}
+
+          <NumberField
+            label="Number of projects" tooltip="Academic or personal projects you've completed"
+            name="projects" value={formData.projects} onChange={handleChange} onBlur={handleBlur}
+            min={0}
             error={touched.projects && errors.projects}
-            min="0"
-            step="1"
           />
-          <FormField
-            label="Number of Workshops/Certifications"
-            tooltip="Total attended workshops or earned certifications"
-            type="number"
-            name="certifications"
-            value={formData.certifications}
-            onChange={handleChange}
-            onBlur={handleBlur}
+
+          <NumberField
+            label="Workshops / certifications" tooltip="Workshops attended or certifications earned"
+            name="certifications" value={formData.certifications} onChange={handleChange} onBlur={handleBlur}
+            min={0}
             error={touched.certifications && errors.certifications}
-            min="0"
-            step="1"
           />
+
           <RangeSlider
-            label="Aptitude Test Score"
-            tooltip="Score from your recent aptitude test"
-            name="aptitude_score"
-            value={formData.aptitude_score}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            min="0"
-            max="100"
-            step="0.1"
-            typicalMin="60"
-            typicalMax="90"
+            label="Aptitude test score" tooltip="Your most recent aptitude test score"
+            name="aptitude_score" value={formData.aptitude_score} onChange={handleChange} onBlur={handleBlur}
+            min="1" max="100" step="1"
           />
+
           <RangeSlider
-            label="Soft Skills Rating"
-            tooltip="Institutional or self-evaluated rating"
-            name="soft_skills_rating"
-            value={formData.soft_skills_rating}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            min="0"
-            max="10"
-            step="0.1"
-            typicalMin="3.0"
-            typicalMax="4.8"
+            label="Soft skills rating" tooltip="Institutional or self-evaluated rating"
+            name="soft_skills_rating" value={formData.soft_skills_rating} onChange={handleChange} onBlur={handleBlur}
+            min="1" max="10" step="0.1"
           />
-          <FormField
-            label="Extracurricular Activities"
-            tooltip="Have you participated in any extracurricular activities?"
-            type="checkbox"
-            name="extracurricular_activities"
-            value={formData.extracurricular_activities}
-            onChange={handleChange}
-            onBlur={handleBlur}
+
+          <ToggleField
+            label="Extracurricular activities" tooltip="Have you taken part in any extracurricular activities?"
+            name="extracurricular_activities" checked={formData.extracurricular_activities}
+            onChange={handleChange} onBlur={handleBlur}
           />
-          <FormField
-            label="Placement Training"
-            tooltip="Have you completed the institutional placement training program?"
-            type="checkbox"
-            name="placement_training"
-            value={formData.placement_training}
-            onChange={handleChange}
-            onBlur={handleBlur}
+
+          <ToggleField
+            label="Completed placement training" tooltip="Have you completed the institutional placement training program?"
+            name="placement_training" checked={formData.placement_training}
+            onChange={handleChange} onBlur={handleBlur}
           />
-          <FormField
-            label="Active Backlogs"
-            tooltip="Current number of active backlogs (must be >= 0)"
-            type="number"
-            name="backlogs"
-            value={formData.backlogs}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            error={touched.backlogs && errors.backlogs}
-            min="0"
-            step="1"
+
+          <StepperField
+            label="Active backlogs" tooltip="Your current number of active backlogs"
+            name="backlogs" value={formData.backlogs} onChange={handleChange} onBlur={handleBlur}
+            min={0} max={10}
           />
 
           <div className="mt-8 pt-6 border-t border-line">
+            <ErrorBanner message={submitError} />
             <button
               type="submit"
               disabled={!isFormValid() || isSubmitting}
-              className={`w-full py-3.5 px-4 font-display font-semibold rounded-2xl transition-colors ${
+              className={`w-full py-4 px-4 font-display font-semibold text-lg transition-all ${
                 !isFormValid() || isSubmitting
-                  ? 'bg-panel text-muted cursor-not-allowed border-2 border-line'
-                  : 'bg-blue text-blue-ink hover:bg-blue-hover'
+                  ? 'bg-panel text-muted cursor-not-allowed rounded-pill border-2 border-line'
+                  : 'btn-primary'
               }`}
             >
               {isSubmitting ? (
-                <div className="flex items-center justify-center gap-2">
-                  <div className="w-5 h-5 border-2 border-blue-ink/30 border-t-blue-ink rounded-full animate-spin"></div>
+                <span className="flex items-center justify-center gap-2">
+                  <span className="w-5 h-5 border-2 border-current/30 border-t-current rounded-full animate-spin" />
                   Predicting...
-                </div>
+                </span>
               ) : (
-                'Predict'
+                'Predict my outcome'
               )}
             </button>
           </div>

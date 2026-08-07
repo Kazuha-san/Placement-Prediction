@@ -2,63 +2,39 @@ import React, { useState, useEffect } from 'react';
 import { api } from '../services/api';
 import ErrorBanner from '../components/ErrorBanner';
 import EmptyState from '../components/EmptyState';
-import ConfidenceBadge from '../components/ConfidenceBadge';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import ProgressChart from '../components/ProgressChart';
+import HistoryDetailModal from '../components/HistoryDetailModal';
+import { ChevronDown, CheckCircle2, XCircle, History as HistoryIcon } from 'lucide-react';
+import BackButton from '../components/BackButton';
 
-const HistoryItem = ({ item }) => {
-  const [expanded, setExpanded] = useState(false);
+const HistoryRow = ({ item, onOpen }) => {
   const isPlaced = item.outcome;
-
   return (
-    <div className="border-2 border-line rounded-2xl bg-white mb-4 overflow-hidden transition-all">
-      <div 
-        className="flex items-center justify-between p-4 cursor-pointer hover:bg-panel"
-        onClick={() => setExpanded(!expanded)}
-      >
-        <div>
-          <div className="text-sm text-muted mb-1">
-            {new Date(item.created_at).toLocaleString()}
-          </div>
-          <div className="font-display font-semibold text-lg flex items-center gap-3">
-            <span className={isPlaced ? 'text-sage-ink' : 'text-pink-ink'}>
-              {isPlaced ? 'Placed' : 'Not placed'}
-            </span>
-            <ConfidenceBadge score={item.confidence_score} />
-          </div>
+    <button
+      onClick={() => onOpen(item)}
+      className="w-full flex items-center justify-between gap-3 surface-card px-5 py-4 text-left
+        hover:border-line-strong transition-colors mb-3"
+    >
+      <div className="flex items-center gap-3 min-w-0">
+        <div
+          className="w-9 h-9 rounded-full flex items-center justify-center shrink-0"
+          style={{ backgroundColor: isPlaced ? 'var(--color-success-bg)' : 'var(--color-danger-bg)' }}
+        >
+          {isPlaced
+            ? <CheckCircle2 size={18} style={{ color: 'var(--color-success)' }} />
+            : <XCircle size={18} style={{ color: 'var(--color-danger)' }} />}
         </div>
-        <div>
-          {expanded ? <ChevronUp className="text-muted" /> : <ChevronDown className="text-muted" />}
+        <div className="min-w-0">
+          <p className="text-sm text-muted">{new Date(item.created_at).toLocaleDateString()}</p>
+          <p className="font-semibold text-ink text-sm truncate">
+            {isPlaced ? 'Placed' : 'Not placed'}
+          </p>
         </div>
       </div>
-      
-      {expanded && (
-        <div className="p-4 border-t-2 border-line bg-panel">
-          <h4 className="text-sm font-semibold mb-3 text-muted uppercase tracking-wider">Profile submitted</h4>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-4 gap-x-2 text-sm mb-4">
-            <div><span className="text-muted block">CGPA:</span> {item.cgpa}</div>
-            <div><span className="text-muted block">Internships:</span> {item.internships}</div>
-            <div><span className="text-muted block">Projects:</span> {item.projects}</div>
-            <div><span className="text-muted block">Certifications:</span> {item.certifications}</div>
-            <div><span className="text-muted block">Aptitude Score:</span> {item.aptitude_score}</div>
-            <div><span className="text-muted block">Soft Skills:</span> {item.soft_skills_rating}</div>
-            <div><span className="text-muted block">Extracurriculars:</span> {item.extracurricular_activities ? 'Yes' : 'No'}</div>
-            <div><span className="text-muted block">Training:</span> {item.placement_training ? 'Yes' : 'No'}</div>
-            <div><span className="text-muted block">Backlogs:</span> {item.backlogs}</div>
-          </div>
-          
-          {item.limiting_features && Object.keys(item.limiting_features).length > 0 && (
-            <>
-              <h4 className="text-sm font-semibold mb-2 text-muted uppercase tracking-wider">Limiting features</h4>
-              <ul className="list-disc pl-5 text-sm text-ink space-y-1">
-                {Object.entries(item.limiting_features).map(([key, value]) => (
-                  <li key={key}>{key}: {value}</li>
-                ))}
-              </ul>
-            </>
-          )}
-        </div>
-      )}
-    </div>
+      <span className="font-mono-readout font-semibold text-sm shrink-0">
+        {Math.round(item.confidence_score * 100)}%
+      </span>
+    </button>
   );
 };
 
@@ -66,6 +42,8 @@ const History = () => {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [chartOpen, setChartOpen] = useState(true);
+  const [activeItem, setActiveItem] = useState(null);
 
   useEffect(() => {
     const fetchHistory = async () => {
@@ -74,34 +52,65 @@ const History = () => {
         setHistory(data);
         setError(null);
       } catch (err) {
-        setError("couldn't load history, please try again");
+        setError("Couldn't load history, please try again");
       } finally {
         setLoading(false);
       }
     };
-
     fetchHistory();
   }, []);
 
   return (
-    <div className="max-w-3xl mx-auto py-8 px-4">
-      <h2 className="font-display text-2xl font-semibold mb-6">Prediction history</h2>
-      
-      {error && <ErrorBanner message={error} />}
-      
-      {!loading && !error && history.length === 0 && (
-        <EmptyState message="No predictions yet — submit your profile to get started" />
-      )}
+    <div className="max-w-3xl mx-auto py-10 px-4 page-enter">
+      <BackButton to="/profile" />
+      <h1 className="font-display text-2xl font-semibold text-ink mb-6">History & progress</h1>
 
-      {!loading && history.map(item => (
-        <HistoryItem key={item.id} item={item} />
-      ))}
+      {error && <ErrorBanner message={error} />}
 
       {loading && (
-        <div className="flex justify-center p-12">
-          <div className="w-8 h-8 border-4 border-line border-t-blue-ink rounded-full animate-spin"></div>
+        <div className="flex justify-center p-16">
+          <div className="w-8 h-8 border-4 border-line rounded-full animate-spin"
+            style={{ borderTopColor: 'var(--color-primary-to)' }} />
         </div>
       )}
+
+      {!loading && !error && (
+        <>
+          {/* Collapsible chart */}
+          <div className="surface-card mb-6 overflow-hidden">
+            <button
+              onClick={() => setChartOpen((o) => !o)}
+              className="w-full flex items-center justify-between px-6 py-4"
+            >
+              <span className="font-display font-semibold text-ink">Confidence over time</span>
+              <ChevronDown
+                size={18}
+                className="text-muted transition-transform duration-200"
+                style={{ transform: chartOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
+              />
+            </button>
+            <div
+              className="grid transition-[grid-template-rows] duration-300 ease-out"
+              style={{ gridTemplateRows: chartOpen ? '1fr' : '0fr' }}
+            >
+              <div className="overflow-hidden">
+                <div className="px-4 pb-4">
+                  <ProgressChart data={history} />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* List */}
+          {history.length === 0 ? (
+            <EmptyState message="No predictions yet — submit your profile to get started" icon={HistoryIcon} />
+          ) : (
+            history.map((item) => <HistoryRow key={item.id} item={item} onOpen={setActiveItem} />)
+          )}
+        </>
+      )}
+
+      <HistoryDetailModal item={activeItem} onClose={() => setActiveItem(null)} />
     </div>
   );
 };

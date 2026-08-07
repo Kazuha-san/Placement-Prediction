@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime
-from sqlalchemy import Column, String, DateTime
+from sqlalchemy import Column, String, DateTime, Integer
 from sqlalchemy.dialects.postgresql import UUID
 from app.db.base import Base
 
@@ -12,3 +12,6 @@ class User(Base):
     oauth_provider = Column(String, nullable=False)
     oauth_subject_id = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    display_name = Column(String, nullable=True)
+    semester = Column(Integer, nullable=True)
+    year = Column(Integer, nullable=True)

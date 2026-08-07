@@ -1,18 +1,20 @@
 import React from 'react';
 
 const ConfidenceBadge = ({ score }) => {
-  // Convert 0-1 scale to percentage if necessary, assuming score is 0-100 based on schema output
   const percentage = Math.round(score * 100);
-  
-  let colorClass = "bg-sage/40 text-sage-ink";
+
+  let style = { bg: 'var(--color-success-bg)', line: 'var(--color-success-line)', text: 'var(--color-success)' };
   if (percentage < 40) {
-    colorClass = "bg-coral-bg text-coral";
+    style = { bg: 'var(--color-danger-bg)', line: 'var(--color-danger-line)', text: 'var(--color-danger)' };
   } else if (percentage < 70) {
-    colorClass = "bg-yellow/50 text-yellow-ink";
+    style = { bg: 'var(--color-warning-bg)', line: 'var(--color-warning-bg)', text: 'var(--color-warning)' };
   }
 
   return (
-    <div className={`inline-flex items-center px-4 py-1.5 rounded-full font-mono-readout text-sm font-semibold ${colorClass}`}>
+    <div
+      className="inline-flex items-center px-4 py-1.5 rounded-pill font-mono-readout text-sm font-semibold border"
+      style={{ backgroundColor: style.bg, borderColor: style.line, color: style.text }}
+    >
       {percentage}% confidence
     </div>
   );

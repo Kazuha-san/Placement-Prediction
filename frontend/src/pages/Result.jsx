@@ -1,9 +1,10 @@
 import React from 'react';
 import { useLocation, Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import ConfidenceBadge from '../components/ConfidenceBadge';
 import Disclaimer from '../components/Disclaimer';
 import ErrorBanner from '../components/ErrorBanner';
+import { CheckCircle2, XCircle, Sparkles, ArrowRight, Bell } from 'lucide-react';
+import BackButton from '../components/BackButton';
 
 const Result = () => {
   const { isGuest } = useAuth();
@@ -12,11 +13,9 @@ const Result = () => {
 
   if (error) {
     return (
-      <div className="max-w-xl mx-auto py-12 px-4">
+      <div className="max-w-xl mx-auto py-12 px-4 page-enter">
+        <BackButton to="/profile" label="Back to form" />
         <ErrorBanner message={error} />
-        <Link to="/profile" className="text-blue-ink font-medium hover:underline">
-          &larr; Back to profile form
-        </Link>
       </div>
     );
   }
@@ -26,63 +25,87 @@ const Result = () => {
   }
 
   const isPlaced = result.outcome;
+  const percentage = Math.round(result.confidence_score * 100);
+  const factors = result.limiting_features ? Object.entries(result.limiting_features) : [];
 
   return (
-    <div className="max-w-2xl mx-auto py-12 px-4">
-      <div className="glass-panel p-8 text-center">
-        <h2 className="font-display text-2xl font-semibold mb-8">Prediction result</h2>
-        
-        <div className={`inline-flex items-center justify-center w-32 h-32 rounded-full mb-6 border-4 ${isPlaced ? 'bg-sage/40 text-sage-ink border-sage' : 'bg-pink/30 text-pink-ink border-pink'}`}>
-          <span className="font-display text-xl font-semibold">
-            {isPlaced ? 'Placed' : 'Not placed'}
-          </span>
-        </div>
+    <div className="max-w-2xl mx-auto py-10 px-4 page-enter">
+      <BackButton to="/profile" label="Back to form" />
+      <div className="surface-card p-6 md:p-10 text-center relative overflow-hidden">
+        <div
+          className="absolute top-0 left-0 right-0 h-40 opacity-25 pointer-events-none"
+          style={{
+            background: isPlaced
+              ? 'radial-gradient(ellipse at top, var(--color-success), transparent 70%)'
+              : 'radial-gradient(ellipse at top, var(--color-danger), transparent 70%)',
+          }}
+        />
 
-        <div className="mb-8">
-          <ConfidenceBadge score={result.confidence_score} />
-        </div>
+        <div className="relative">
+          <p className="text-sm font-semibold uppercase tracking-wide text-muted mb-6">Your prediction</p>
 
-        {result.limiting_features && Object.keys(result.limiting_features).length > 0 && (
-          <div className="mb-8 text-left bg-panel p-5 rounded-2xl border-2 border-line">
-            <h3 className="font-display font-semibold mb-2">Areas for improvement</h3>
-            <ul className="list-disc pl-5 space-y-1 text-sm text-muted">
-              {Object.entries(result.limiting_features).map(([key, value]) => (
-                <li key={key}>{key}: {value}</li>
-              ))}
-            </ul>
+          {/* Hero score */}
+          <div className="flex flex-col items-center mb-3">
+            <span className="font-display font-semibold leading-none text-ink" style={{ fontSize: 'clamp(3.5rem, 12vw, 5.5rem)' }}>
+              {percentage}%
+            </span>
+            <span className="text-muted text-sm mt-1">confidence</span>
           </div>
-        )}
 
-        <Disclaimer />
-
-        <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
-          <Link
-            to="/profile"
-            className="px-6 py-2.5 bg-white hover:bg-panel border-2 border-line rounded-2xl font-medium transition-colors"
+          <div
+            className="inline-flex items-center gap-2 px-5 py-2 rounded-pill font-semibold mb-8"
+            style={{
+              backgroundColor: isPlaced ? 'var(--color-success-bg)' : 'var(--color-danger-bg)',
+              color: isPlaced ? 'var(--color-success)' : 'var(--color-danger)',
+              border: `1px solid ${isPlaced ? 'var(--color-success-line)' : 'var(--color-danger-line)'}`,
+            }}
           >
-            New prediction
-          </Link>
-          {!isGuest && (
-            <Link
-              to="/history"
-              className="px-6 py-2.5 bg-blue hover:bg-blue-hover text-blue-ink rounded-2xl font-medium transition-colors"
-            >
-              View history
-            </Link>
-          )}
-        </div>
-
-        {isGuest && (
-          <div className="mt-8 pt-6 border-t border-line">
-            <p className="text-sm text-muted mb-3">
-              Want to track your progress over time?
-            </p>
-            <Link to="/" className="text-blue-ink font-medium hover:underline">
-              Sign in to unlock History and Progress
-            </Link>
+            {isPlaced ? <CheckCircle2 size={18} /> : <XCircle size={18} />}
+            {isPlaced ? 'Likely to be placed' : 'Not likely, yet'}
           </div>
-        )}
+
+          {factors.length > 0 && (
+            <div className="mb-8 text-left">
+              <div className="flex items-center gap-1.5 mb-3">
+                <Sparkles size={16} className="text-muted" />
+                <h3 className="font-display font-semibold text-ink text-sm">What's shaping this</h3>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {factors.map(([key, value]) => (
+                  <span key={key} className="chip px-4 py-2 text-sm">
+                    <span className="font-semibold capitalize">{key.replace(/_/g, ' ')}:</span> {value}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <Disclaimer />
+
+          <div className="mt-8 flex flex-col sm:flex-row justify-center gap-3">
+            <Link to="/profile" className="btn-secondary px-6 py-2.5 font-medium">
+              New prediction
+            </Link>
+            {!isGuest && (
+              <Link to="/history" className="btn-primary px-6 py-2.5 font-medium">
+                View history
+              </Link>
+            )}
+          </div>
+        </div>
       </div>
+
+      {isGuest && (
+        <div className="mt-5 surface-card p-5 flex items-center gap-4">
+          <div className="chip p-2.5 shrink-0"><Bell size={18} /></div>
+          <p className="text-sm text-muted flex-1">
+            This result won't be saved. Sign in to keep it and track your progress over time.
+          </p>
+          <Link to="/signin" className="text-sm font-semibold text-ink flex items-center gap-1 shrink-0 hover:underline">
+            Sign in <ArrowRight size={14} />
+          </Link>
+        </div>
+      )}
     </div>
   );
 };

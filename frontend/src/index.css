@@ -1,74 +1,259 @@
-@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap');
 @import "tailwindcss";
 
+/*
+  DESIGN SYSTEM — Placement Prediction
+  Light mode palette derived from the hero reference: a soft diagonal
+  gradient wash of warm peach/orange bleeding into cool blue/lavender.
+  That same warm→cool spectrum is the base for every gradient fill in
+  the app (buttons, cards, sliders, chips) — never flat solid color.
+
+  Semantic exception: outcome colors (placed = green, not placed = red)
+  sit deliberately OUTSIDE this palette because they need instant,
+  unambiguous recognition on the Progress chart and Result screen.
+*/
+
 @theme {
+  /* ---------- LIGHT MODE ---------- */
+
   /* Base surfaces */
-  --color-cream: #FFFCF7;    /* page bg */
-  --color-card: #FFFFFF;     /* card bg */
-  --color-panel: #FBF6EC;    /* nested panel bg inside a card */
+  --color-cream: #FFFBF6;        /* page bg (very warm off-white) */
+  --color-card: #FFFFFF;         /* card bg */
+  --color-panel: #FDF5EE;        /* nested panel inside a card */
 
   /* Text */
-  --color-ink: #2E2A25;      /* warm charcoal, main text */
-  --color-muted: #82796C;    /* muted warm gray */
+  --color-ink: #2B2621;          /* warm charcoal, main text */
+  --color-muted: #85796C;        /* muted warm gray */
 
   /* Borders */
-  --color-line: #E9E1D2;
-  --color-line-strong: #D8CCB4;
+  --color-line: #EFE3D6;
+  --color-line-strong: #E0CFB8;
 
-  /* Primary = baby blue */
-  --color-blue: #D9CDEF;
-  --color-blue-hover: #C7B8E8;
-  --color-blue-ink: #4A3B7A;   /* text/icons on baby blue, links */
+  /* Hero gradient wash — warm peach/orange -> cool blue/lavender */
+  --color-wash-warm-1: #FBDCC0;  /* peach */
+  --color-wash-warm-2: #F6C9A8;  /* soft orange */
+  --color-wash-cool-1: #D6E4F7;  /* pale sky blue */
+  --color-wash-cool-2: #DCD6F5;  /* pale lavender */
 
-  /* Secondary = soft pink */
-  --color-pink: #F4C6D7;
-  --color-pink-ink: #82304C;
+  /* Primary gradient family (buttons, active states, accents) */
+  --color-primary-from: #F3B98E; /* warm peach-orange */
+  --color-primary-to:   #A7C4EE; /* cool blue */
+  --color-primary-ink:  #4A3B22; /* text/icons on primary gradient */
 
-  /* Accent / success = soft yellow */
-  --color-yellow: #FCE38A;
-  --color-yellow-ink: #6B4E02;
+  /* Secondary gradient family (secondary cards, chips) */
+  --color-secondary-from: #E9D6F2; /* soft lavender */
+  --color-secondary-to:   #CFE3F7; /* soft blue */
+  --color-secondary-ink:  #4A3B7A;
 
-  /* Calm "needs work" alternative to red = muted sage */
-  --color-sage: #B8CFAE;
-  --color-sage-ink: #35502E;
+  /* Neutral card gradient (subtle warm-white lift, used on most cards) */
+  --color-surface-from: #FFFFFF;
+  --color-surface-to:   #FDF6EC;
 
-  /* Reserved for real errors/validation only, kept soft */
-  --color-coral: #D9695B;
-  --color-coral-bg: #FBEAE7;
-  --color-coral-line: #EFC3BA;
+  /* Semantic — outcome (kept deliberately outside base palette) */
+  --color-success: #4E9E6C;
+  --color-success-bg: #E7F5EC;
+  --color-success-line: #BFE3CC;
+
+  --color-danger: #D9695B;
+  --color-danger-bg: #FBEAE7;
+  --color-danger-line: #EFC3BA;
+
+  --color-warning: #D9A441;
+  --color-warning-bg: #FBF1DD;
 
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-display: 'Fredoka', 'Inter', sans-serif;
+  --font-display: 'Sora', 'Inter', sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 
-  --radius-card: 1.5rem;   /* 24px */
+  --radius-card: 1.5rem;    /* 24px */
+  --radius-pill: 999px;
+
+  --shadow-soft: 0 8px 30px -12px rgb(43 38 33 / 0.12);
+  --shadow-card: 0 4px 20px -8px rgb(43 38 33 / 0.08);
+}
+
+/* ---------- DARK MODE ---------- */
+/* Toggled via a `dark` class on <html>. Not black — a deep navy/plum
+   base so it still reads "soft," with the same warm/cool gradient
+   family desaturated into glows and borders rather than washes. */
+.dark {
+  --color-cream: #17151F;
+  --color-card: #1E1B29;
+  --color-panel: #262135;
+
+  --color-ink: #F1ECE3;
+  --color-muted: #A79E96;
+
+  --color-line: #332D42;
+  --color-line-strong: #443B57;
+
+  --color-wash-warm-1: #3A2E33;
+  --color-wash-warm-2: #453327;
+  --color-wash-cool-1: #212A45;
+  --color-wash-cool-2: #262041;
+
+  --color-primary-from: #C98F5C;
+  --color-primary-to:   #6E8FD6;
+  --color-primary-ink:  #FCEEDD;
+
+  --color-secondary-from: #4A3B63;
+  --color-secondary-to:   #33456B;
+  --color-secondary-ink:  #E7DCF7;
+
+  --color-surface-from: #211D2E;
+  --color-surface-to:   #262135;
+
+  --color-success: #6BC48C;
+  --color-success-bg: #1B3327;
+  --color-success-line: #2E5A40;
+
+  --color-danger: #E28579;
+  --color-danger-bg: #3A2320;
+  --color-danger-line: #5C3733;
+
+  --color-warning: #E3BB6C;
+  --color-warning-bg: #3A3120;
+
+  --shadow-soft: 0 8px 30px -10px rgb(0 0 0 / 0.45);
+  --shadow-card: 0 4px 20px -8px rgb(0 0 0 / 0.35);
 }
 
 @layer base {
+  html {
+    color-scheme: light;
+  }
+  html.dark {
+    color-scheme: dark;
+  }
   body {
-    background-color: var(--color-cream);
+    background: linear-gradient(150deg,
+      var(--color-wash-warm-1) 0%,
+      var(--color-cream) 22%,
+      var(--color-cream) 78%,
+      var(--color-wash-cool-1) 100%);
+    background-attachment: fixed;
     color: var(--color-ink);
     font-family: var(--font-sans);
     margin: 0;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.25s ease, color 0.25s ease;
   }
   h1, h2, h3 {
     font-family: var(--font-display);
   }
+  /* Visible keyboard focus everywhere — accessibility floor */
+  :focus-visible {
+    outline: 2px solid var(--color-primary-to);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }
 
-/* Flat pastel card — replaces the old glassmorphism panel */
 @layer utilities {
-  .glass-panel {
-    background: var(--color-card);
+  .font-display { font-family: var(--font-display); }
+  .font-mono-readout { font-family: var(--font-mono); }
+
+  /* Atmospheric hero wash — diagonal gradient, used on Landing/Login backdrops */
+  .hero-wash {
+    background: linear-gradient(115deg,
+      var(--color-wash-warm-1) 0%,
+      var(--color-wash-warm-2) 28%,
+      var(--color-wash-cool-1) 68%,
+      var(--color-wash-cool-2) 100%);
+  }
+
+  /* Standard card surface: soft gradient, not flat white */
+  .surface-card {
+    background: linear-gradient(160deg, var(--color-surface-from), var(--color-surface-to));
     border: 1.5px solid var(--color-line);
     border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
   }
-  .font-display {
-    font-family: var(--font-display);
+
+  /* Frosted glass card — floating over the hero wash (login/onboarding/popups) */
+  .glass-card {
+    background: color-mix(in oklab, var(--color-card) 72%, transparent);
+    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    border: 1px solid color-mix(in oklab, var(--color-line) 60%, transparent);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-soft);
   }
-  .font-mono-readout {
-    font-family: var(--font-mono);
+
+  /* Primary gradient CTA button */
+  .btn-primary {
+    background: linear-gradient(135deg, var(--color-primary-from), var(--color-primary-to));
+    color: var(--color-primary-ink);
+    border-radius: var(--radius-pill);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+  }
+  .btn-primary:hover {
+    filter: brightness(1.05);
+    box-shadow: var(--shadow-soft);
+    transform: translateY(-1px);
+  }
+  .btn-primary:active {
+    transform: translateY(0px) scale(0.98);
+  }
+
+  /* Secondary/pill button (e.g. social auth) */
+  .btn-secondary {
+    background: var(--color-card);
+    border: 1.5px solid var(--color-line);
+    border-radius: var(--radius-pill);
+    color: var(--color-ink);
+    transition: border-color 0.15s ease, transform 0.15s ease, background-color 0.15s ease;
+  }
+  .btn-secondary:hover {
+    border-color: var(--color-line-strong);
+    transform: translateY(-1px);
+  }
+
+  /* Stat chip (result screen factors, history summaries) */
+  .chip {
+    background: linear-gradient(135deg, var(--color-secondary-from), var(--color-secondary-to));
+    color: var(--color-secondary-ink);
+    border-radius: var(--radius-pill);
+  }
+
+  /* Backdrop for overlay drawer / popups */
+  .scrim {
+    background: color-mix(in oklab, var(--color-ink) 35%, transparent);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+
+  /* Page-transition helper (paired with a small mount animation in each page) */
+  .page-enter {
+    animation: page-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  @keyframes page-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .drawer-enter {
+    animation: drawer-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  @keyframes drawer-in {
+    from { transform: translateX(100%); }
+    to   { transform: translateX(0); }
+  }
+
+  .scrim-enter {
+    animation: scrim-in 0.25s ease both;
+  }
+  @keyframes scrim-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
   }
 }
