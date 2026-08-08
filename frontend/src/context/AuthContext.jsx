@@ -50,12 +50,6 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
-  const loginAsDevUser = () => {
-    if (!import.meta.env.DEV) return;
-    setUser({ id: 'dev-preview', name: 'Dev preview', email: 'dev@preview.local' });
-    setIsGuest(false);
-  };
-
   const loginSuccess = () => {
     // Re-fetch user from backend to populate state after cookie is set
     setLoading(true);
@@ -78,7 +72,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ user, isGuest, loginAsGuest, loginAsDevUser, loginSuccess, logout, refreshUser }}>
+    <AuthContext.Provider value={{ user, isGuest, loginAsGuest, loginSuccess, logout, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );

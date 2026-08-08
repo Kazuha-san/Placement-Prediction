@@ -75,7 +75,14 @@ const TopBar = () => {
           )}
 
           {isGuest && (
-            <span className="text-sm text-muted italic">Guest session</span>
+            <button
+              onClick={handleLogout}
+              className="text-sm text-muted hover:text-ink transition-colors flex items-center gap-1.5 px-2.5 py-1 rounded-pill hover:bg-panel border border-transparent hover:border-line"
+            >
+              <span className="italic">Guest session</span>
+              <span>·</span>
+              <span className="font-medium">Exit</span>
+            </button>
           )}
         </div>
       </header>

@@ -12,3 +12,4 @@ joblib
 google-auth
 requests
 shap
+pandas

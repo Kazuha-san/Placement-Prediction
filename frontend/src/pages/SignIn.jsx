@@ -1,14 +1,19 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { AlertCircle } from 'lucide-react';
 import BackButton from '../components/BackButton';
+import { api } from '../services/api';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+// Flip VITE_ENABLE_DEMO_LOGIN=false in frontend/.env to remove the demo link entirely.
+const DEMO_LOGIN_ENABLED = import.meta.env.VITE_ENABLE_DEMO_LOGIN !== 'false';
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const { user, isGuest, loginAsGuest, loginAsDevUser } = useAuth();
+  const { user, isGuest, loginAsGuest, refreshUser } = useAuth();
+  const [demoError, setDemoError] = useState(false);
+  const [demoLoading, setDemoLoading] = useState(false);
 
   useEffect(() => {
     if (user || isGuest) {
@@ -22,12 +27,21 @@ const SignIn = () => {
 
   const handleGuestLogin = () => {
     loginAsGuest();
-    navigate('/profile');
+    navigate('/profile', { replace: true });
   };
 
-  const handleDevPreview = () => {
-    loginAsDevUser();
-    navigate('/history');
+  const handleDemoLogin = async () => {
+    setDemoError(false);
+    setDemoLoading(true);
+    try {
+      await api.loginDemo();
+      await refreshUser();
+      navigate('/history');
+    } catch (err) {
+      setDemoError(true);
+    } finally {
+      setDemoLoading(false);
+    }
   };
 
   const urlParams = new URLSearchParams(window.location.search);
@@ -87,20 +101,32 @@ const SignIn = () => {
           >
             Enter as Guest
           </button>
-
-          {import.meta.env.DEV && (
-            <button
-              onClick={handleDevPreview}
-              className="w-full py-2 px-4 text-xs text-muted font-medium rounded-pill hover:bg-panel transition-colors border border-dashed border-line-strong mt-2"
-            >
-              Dev: preview signed-in screens (mock data)
-            </button>
-          )}
         </div>
 
         <p className="text-xs text-muted text-center mt-7">
           Guest sessions aren't saved. Sign in with Google to keep your history.
         </p>
+
+        {DEMO_LOGIN_ENABLED && (
+          <>
+            <p className="text-xs text-muted text-center mt-2">
+              Reviewing this project?{' '}
+              <button
+                onClick={handleDemoLogin}
+                disabled={demoLoading}
+                className="underline hover:text-ink transition-colors disabled:opacity-50"
+              >
+                {demoLoading ? 'Loading demo…' : 'Open the demo student account'}
+              </button>{' '}
+              to see it with sample history already in it.
+            </p>
+            {demoError && (
+              <p className="text-xs text-danger text-center mt-2">
+                Could not open the demo account. Please try again.
+              </p>
+            )}
+          </>
+        )}
         </div>
       </div>
     </div>
