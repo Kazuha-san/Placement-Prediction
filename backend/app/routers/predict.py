@@ -9,7 +9,7 @@ from app.db import get_db
 from app.deps import get_current_user_or_guest
 from app.models import Prediction, Profile, User
 from app.prediction import predict
-from app.schemas import PredictionResponse, ProfileCreate
+from app.schemas import PredictionResponse, ProfileCreate, ProfileResponse
 
 router = APIRouter()
 
@@ -29,12 +29,16 @@ async def create_prediction(
     outcome, confidence, key_factors, out_of_range_fields = await predict(profile_data)
 
     if not current_user:
-        # Guest mode - don't persist anything
+        # Guest mode - don't persist anything, but still echo back the submitted
+        # profile so the response shape matches the authenticated path.
+        guest_profile_id = uuid.uuid4()
+        now = datetime.utcnow()
         return PredictionResponse(
-            id=uuid.uuid4(), profile_id=uuid.uuid4(), user_id=None,
+            id=uuid.uuid4(), profile_id=guest_profile_id, user_id=None,
             outcome=outcome, confidence_score=confidence,
             limiting_features=key_factors, out_of_range_fields=out_of_range_fields,
-            created_at=datetime.utcnow(), disclaimer=DISCLAIMER_TEXT,
+            created_at=now, disclaimer=DISCLAIMER_TEXT,
+            profile=ProfileResponse(id=guest_profile_id, user_id=None, created_at=now, **profile_data),
         )
 
     db_profile = Profile(**profile_data, user_id=current_user.id)
@@ -55,4 +59,5 @@ async def create_prediction(
         outcome=db_prediction.outcome, confidence_score=db_prediction.confidence_score,
         limiting_features=db_prediction.limiting_features, out_of_range_fields=db_prediction.out_of_range_fields,
         created_at=db_prediction.created_at, disclaimer=DISCLAIMER_TEXT,
+        profile=ProfileResponse.model_validate(db_profile),
     )

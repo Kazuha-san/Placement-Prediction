@@ -72,6 +72,10 @@ class PredictionResponse(PredictionCreate):
     id: UUID
     created_at: datetime
     disclaimer: str
+    # The full submitted profile this prediction was based on - needed so History
+    # can show what was actually entered (cgpa, internships, etc), not just the
+    # outcome. None only in the unexpected case where the linked profile is missing.
+    profile: Optional[ProfileResponse] = None
 
     model_config = {"from_attributes": True}
 

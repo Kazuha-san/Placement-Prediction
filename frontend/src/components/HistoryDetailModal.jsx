@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, CheckCircle2, XCircle } from 'lucide-react';
 import ConfidenceBadge from './ConfidenceBadge';
 
@@ -24,8 +25,15 @@ const HistoryDetailModal = ({ item, onClose }) => {
   if (!item) return null;
   const isPlaced = item.outcome;
   const factors = item.limiting_features ? Object.entries(item.limiting_features) : [];
+  const profile = item.profile || {};
 
-  return (
+  // Rendered via a portal straight onto document.body - this modal must never
+  // live inside a page's transformed/animated wrapper (e.g. the "page-enter"
+  // class), because a transform on any ancestor turns that ancestor into the
+  // containing block for this modal's `position: fixed`, making it clip to
+  // that ancestor's box instead of covering the real viewport. Portalling
+  // to <body> sidesteps that regardless of where <HistoryDetailModal> is used.
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 scrim scrim-enter" onClick={onClose} />
       <div className="relative z-10 w-full max-w-md glass-card p-6 md:p-7 max-h-[85vh] overflow-y-auto page-enter">
@@ -58,7 +66,11 @@ const HistoryDetailModal = ({ item, onClose }) => {
           {fieldRows.map(([key, label, fmt]) => (
             <div key={key}>
               <span className="text-muted block text-xs">{label}</span>
-              <span className="font-medium text-ink">{fmt ? fmt(item[key]) : item[key]}</span>
+              <span className="font-medium text-ink">
+                {profile[key] !== undefined && profile[key] !== null
+                  ? (fmt ? fmt(profile[key]) : profile[key])
+                  : '—'}
+              </span>
             </div>
           ))}
         </div>
@@ -76,7 +88,8 @@ const HistoryDetailModal = ({ item, onClose }) => {
           </>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
