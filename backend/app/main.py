@@ -1,13 +1,22 @@
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import settings
 from app.db import get_db
+from app.rate_limit import limiter
 from app.routers import auth, history, predict, progress
 
 app = FastAPI(title="Placement Predictions Backend")
+
+# Burst-rate protection only - not a daily quota. Caps how many requests one
+# IP can fire per minute, purely to stop a script from hammering the server;
+# it doesn't track or limit total usage, and resets every minute on its own.
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 app.add_middleware(
     CORSMiddleware,

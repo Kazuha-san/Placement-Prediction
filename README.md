@@ -6,7 +6,7 @@ A full-stack application that evaluates a student's academic profile to predict 
 
 - [`backend/`](./backend/) - FastAPI application with the ML prediction service and PostgreSQL database interactions.
 - [`frontend/`](./frontend/) - React + Vite frontend providing the user interface.
-- [`SRS_PlacementPredictions.md`](./SRS_PlacementPredictions.md) - Software Requirements Specification.
+
 
 For setup and execution instructions, please refer to the specific README files in each subdirectory:
 - [Backend Setup Guide](./backend/README.md)

@@ -4,6 +4,7 @@ import { useTheme } from '../context/ThemeContext';
 import { api } from '../services/api';
 import { User, Palette, ShieldAlert, Sun, Moon, Check } from 'lucide-react';
 import BackButton from '../components/BackButton';
+import ConfirmModal from '../components/ConfirmModal';
 
 const SectionHeading = ({ icon: Icon, title, subtitle }) => (
   <div className="flex items-center gap-3 mb-5">
@@ -21,7 +22,13 @@ const Settings = () => {
   const [displayName, setDisplayName] = useState(user?.name || '');
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState(null);
-  const [confirmingDelete, setConfirmingDelete] = useState(false);
+
+  // Delete-account is now a separate modal, not an in-place button swap -
+  // the old version replaced "Delete my account" with "Yes, permanently
+  // delete" in the exact same spot, which invited misclicks from people
+  // clicking without reading. A modal forces a deliberate, separate action.
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const [deleteError, setDeleteError] = useState(null);
 
   const handleSaveName = async (e) => {
@@ -34,6 +41,19 @@ const Settings = () => {
       setTimeout(() => setSaved(false), 2000);
     } catch (err) {
       setError(err.message || 'Failed to save name');
+    }
+  };
+
+  const handleConfirmDelete = async () => {
+    setDeleteLoading(true);
+    setDeleteError(null);
+    try {
+      await api.deleteAccount();
+      await logout();
+      window.location.href = '/';
+    } catch (err) {
+      setDeleteError(err.message || 'Failed to delete account');
+      setDeleteLoading(false);
     }
   };
 
@@ -117,46 +137,33 @@ const Settings = () => {
           Permanently deleting your account removes your profile and all saved prediction history.
           This can't be undone.
         </p>
-        {!confirmingDelete ? (
-          <button
-            onClick={() => setConfirmingDelete(true)}
-            className="px-5 py-2.5 rounded-pill text-sm font-semibold border-2"
-            style={{ color: 'var(--color-danger)', borderColor: 'var(--color-danger-line)' }}
-          >
-            Delete my account
-          </button>
-        ) : (
-          <div className="flex flex-col sm:flex-row gap-2">
-            <button
-              className="px-5 py-2.5 rounded-pill text-sm font-semibold text-white"
-              style={{ background: 'var(--color-danger)' }}
-              onClick={async () => {
-                try {
-                  await api.deleteAccount();
-                  await logout();
-                  window.location.href = '/';
-                } catch (err) {
-                  setDeleteError(err.message || 'Failed to delete account');
-                }
-              }}
-            >
-              Yes, permanently delete
-            </button>
-            <button
-              onClick={() => {
-                setConfirmingDelete(false);
-                setDeleteError(null);
-              }}
-              className="btn-secondary px-5 py-2.5 text-sm font-medium"
-            >
-              Cancel
-            </button>
-          </div>
-        )}
-        {deleteError && (
-          <p className="mt-3 text-xs text-danger font-medium">{deleteError}</p>
-        )}
+        <button
+          onClick={() => {
+            setDeleteError(null);
+            setDeleteModalOpen(true);
+          }}
+          className="px-5 py-2.5 rounded-pill text-sm font-semibold border-2"
+          style={{ color: 'var(--color-danger)', borderColor: 'var(--color-danger-line)' }}
+        >
+          Delete my account
+        </button>
       </section>
+
+      {deleteModalOpen && (
+        <ConfirmModal
+          title="Delete your account?"
+          message="This permanently removes your profile and all saved prediction history. This can't be undone."
+          confirmLabel="Yes, permanently delete"
+          cancelLabel="Cancel"
+          danger
+          loading={deleteLoading}
+          error={deleteError}
+          onConfirm={handleConfirmDelete}
+          onCancel={() => {
+            if (!deleteLoading) setDeleteModalOpen(false);
+          }}
+        />
+      )}
     </div>
   );
 };

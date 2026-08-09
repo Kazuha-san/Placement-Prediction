@@ -10,6 +10,7 @@ import History from './pages/History';
 import Settings from './pages/Settings';
 import Drawer from './components/Drawer';
 import OnboardingModal from './components/OnboardingModal';
+import GuestExitGuard from './components/GuestExitGuard';
 import ThemeToggle from './components/ThemeToggle';
 import { Menu } from 'lucide-react';
 import { api } from './services/api';
@@ -133,6 +134,7 @@ const AppContent = () => {
   return (
     <>
       {(user || isGuest) && <TopBar />}
+      {isGuest && <GuestExitGuard />}
       <main>
         <Routes>
           <Route path="/" element={<Landing />} />

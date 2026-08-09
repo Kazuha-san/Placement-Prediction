@@ -2,13 +2,14 @@ import uuid
 from datetime import datetime
 from typing import Optional
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db import get_db
 from app.deps import get_current_user_or_guest
 from app.models import Prediction, Profile, User
 from app.prediction import predict
+from app.rate_limit import limiter
 from app.schemas import PredictionResponse, ProfileCreate, ProfileResponse
 
 router = APIRouter()
@@ -20,7 +21,9 @@ DISCLAIMER_TEXT = (
 
 
 @router.post("/", response_model=PredictionResponse)
+@limiter.limit("15/minute")
 async def create_prediction(
+    request: Request,
     profile_in: ProfileCreate,
     current_user: Optional[User] = Depends(get_current_user_or_guest),
     db: AsyncSession = Depends(get_db),
