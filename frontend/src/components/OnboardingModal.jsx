@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { UserPlus } from 'lucide-react';
+import Select from './Select';
 
 const SEMESTERS = Array.from({ length: 8 }, (_, i) => i + 1);
 const YEARS = [1, 2, 3, 4];
@@ -67,31 +68,23 @@ const OnboardingModal = ({ onComplete, error }) => {
               <label htmlFor="semester" className="block text-sm font-semibold text-ink mb-1.5">
                 Semester <span className="text-muted font-normal">(optional)</span>
               </label>
-              <select
+              <Select
                 id="semester"
                 value={semester}
-                onChange={(e) => setSemester(e.target.value)}
-                className="w-full px-4 py-3 bg-card border-2 border-line rounded-2xl focus:outline-none
-                  focus:ring-2 focus:ring-[var(--color-primary-to)] focus:border-transparent"
-              >
-                <option value="">—</option>
-                {SEMESTERS.map((s) => <option key={s} value={s}>Semester {s}</option>)}
-              </select>
+                onChange={setSemester}
+                options={SEMESTERS.map((s) => ({ value: String(s), label: `Semester ${s}` }))}
+              />
             </div>
             <div>
               <label htmlFor="year" className="block text-sm font-semibold text-ink mb-1.5">
                 Year <span className="text-muted font-normal">(optional)</span>
               </label>
-              <select
+              <Select
                 id="year"
                 value={year}
-                onChange={(e) => setYear(e.target.value)}
-                className="w-full px-4 py-3 bg-card border-2 border-line rounded-2xl focus:outline-none
-                  focus:ring-2 focus:ring-[var(--color-primary-to)] focus:border-transparent"
-              >
-                <option value="">—</option>
-                {YEARS.map((y) => <option key={y} value={y}>Year {y}</option>)}
-              </select>
+                onChange={setYear}
+                options={YEARS.map((y) => ({ value: String(y), label: `Year ${y}` }))}
+              />
             </div>
           </div>
 

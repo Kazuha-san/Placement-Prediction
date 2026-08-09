@@ -41,7 +41,7 @@ const RangeSlider = ({ label, tooltip, name, value, onChange, onBlur, min, max, 
           />
         )}
         <div
-          className="absolute top-1/2 -translate-y-1/2 h-2.5 rounded-pill pointer-events-none transition-[width] duration-100"
+          className="absolute top-1/2 -translate-y-1/2 h-2.5 rounded-pill pointer-events-none"
           style={{
             width: `${fillPercent}%`,
             background: 'linear-gradient(90deg, var(--color-primary-from), var(--color-primary-to))',
@@ -58,12 +58,15 @@ const RangeSlider = ({ label, tooltip, name, value, onChange, onBlur, min, max, 
           onChange={onChange}
           onBlur={onBlur}
           className="relative w-full h-7 appearance-none bg-transparent cursor-pointer z-10
+            [&::-webkit-slider-runnable-track]:h-2.5 [&::-webkit-slider-runnable-track]:bg-transparent
+            [&::-webkit-slider-runnable-track]:rounded-pill
             [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:h-6
-            [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white
+            [&::-webkit-slider-thumb]:mt-[-7px] [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white
             [&::-webkit-slider-thumb]:border-[3px] [&::-webkit-slider-thumb]:border-[var(--color-primary-to)]
             [&::-webkit-slider-thumb]:shadow-soft [&::-webkit-slider-thumb]:transition-transform
             [&::-webkit-slider-thumb]:duration-150 hover:[&::-webkit-slider-thumb]:scale-110
             active:[&::-webkit-slider-thumb]:scale-95
+            [&::-moz-range-track]:h-2.5 [&::-moz-range-track]:bg-transparent [&::-moz-range-track]:rounded-pill
             [&::-moz-range-thumb]:w-6 [&::-moz-range-thumb]:h-6 [&::-moz-range-thumb]:rounded-full
             [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-[3px] [&::-moz-range-thumb]:border-[var(--color-primary-to)]"
         />

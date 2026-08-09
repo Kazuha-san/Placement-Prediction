@@ -11,7 +11,7 @@ class Settings(BaseSettings):
 
     # Auth
     JWT_SECRET: str
-    JWT_EXPIRY_MINUTES: int = 60
+    JWT_EXPIRY_MINUTES: int = 10080
     GOOGLE_CLIENT_ID: str
     GOOGLE_CLIENT_SECRET: str
     GOOGLE_REDIRECT_URI: str

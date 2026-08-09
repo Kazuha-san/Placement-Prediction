@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import ThemeToggle from '../components/ThemeToggle';
 import { ArrowRight, Sparkles, ShieldCheck, LineChart, ClipboardList, GraduationCap } from 'lucide-react';
 
 const Landing = () => {
@@ -52,12 +53,15 @@ const Landing = () => {
           <span className="font-display font-semibold text-lg tracking-tight text-ink">
             Placement Predictions
           </span>
-          <button
-            onClick={() => navigate('/signin')}
-            className="btn-secondary text-sm font-medium px-5 py-2"
-          >
-            Sign in
-          </button>
+          <div className="flex items-center gap-4">
+            <ThemeToggle />
+            <button
+              onClick={() => navigate('/signin')}
+              className="btn-secondary text-sm font-medium px-5 py-2"
+            >
+              Sign in
+            </button>
+          </div>
         </nav>
 
         <div className="relative z-10 max-w-4xl mx-auto px-6 pt-20 pb-28 text-center flex flex-col items-center">
@@ -81,50 +85,21 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* ---------- ABOUT ---------- */}
-      <section className="max-w-5xl mx-auto px-6 py-24">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div>
-            <h2 className="font-display text-3xl md:text-4xl font-semibold text-ink mb-4">
-              What this actually is
-            </h2>
-            <p className="text-muted text-lg leading-relaxed">
-              You enter the things that matter — your CGPA, internships,
-              projects, aptitude score and a few more — and get back a
-              confidence read on your placement chances, plus the factors
-              pulling it up or down. It's a mirror, not a verdict.
-            </p>
-          </div>
-          <div className="surface-card p-8 flex flex-col gap-5">
-            <div className="flex items-start gap-4">
-              <div className="chip p-2.5 shrink-0"><ClipboardList size={20} /></div>
-              <div>
-                <p className="font-semibold text-ink">A short form</p>
-                <p className="text-sm text-muted">Nine fields, about two minutes.</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-4">
-              <div className="chip p-2.5 shrink-0"><LineChart size={20} /></div>
-              <div>
-                <p className="font-semibold text-ink">A clear result</p>
-                <p className="text-sm text-muted">Confidence score and the factors behind it.</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-4">
-              <div className="chip p-2.5 shrink-0"><ShieldCheck size={20} /></div>
-              <div>
-                <p className="font-semibold text-ink">Yours to keep</p>
-                <p className="text-sm text-muted">Sign in and every attempt is tracked over time.</p>
-              </div>
-            </div>
-          </div>
+      {/* ---------- ABOUT & HOW IT WORKS ---------- */}
+      <section className="max-w-5xl mx-auto px-6 py-24 flex flex-col gap-24">
+        <div className="max-w-2xl mx-auto text-center">
+          <h2 className="font-display text-3xl md:text-4xl font-semibold text-ink mb-4">
+            What this actually is
+          </h2>
+          <p className="text-muted text-lg leading-relaxed">
+            You enter the things that matter — your CGPA, internships,
+            projects, aptitude score and a few more — and get back a
+            confidence read on your placement chances, plus the factors
+            pulling it up or down. It's a mirror, not a verdict.
+          </p>
         </div>
-      </section>
 
-      {/* ---------- HOW IT WORKS ---------- */}
-      <section className="relative py-24">
-        <div className="absolute inset-0 bg-panel" />
-        <div className="relative max-w-5xl mx-auto px-6">
+        <div>
           <h2 className="font-display text-3xl md:text-4xl font-semibold text-ink mb-12 text-center">
             How it works
           </h2>

@@ -10,6 +10,7 @@ import History from './pages/History';
 import Settings from './pages/Settings';
 import Drawer from './components/Drawer';
 import OnboardingModal from './components/OnboardingModal';
+import ThemeToggle from './components/ThemeToggle';
 import { Menu } from 'lucide-react';
 import { api } from './services/api';
 
@@ -64,26 +65,30 @@ const TopBar = () => {
             Placement Predictions
           </Link>
 
-          {user && !isGuest && (
-            <button
-              onClick={() => setDrawerOpen(true)}
-              aria-label="Open menu"
-              className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-panel transition-colors"
-            >
-              <Menu size={20} />
-            </button>
-          )}
+          <div className="flex items-center gap-4">
+            <ThemeToggle />
+            {user && !isGuest && (
+              <button
+                onClick={() => setDrawerOpen(true)}
+                aria-label="Open menu"
+                className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-panel transition-colors"
+              >
+                <Menu size={20} />
+              </button>
+            )}
 
-          {isGuest && (
-            <button
-              onClick={handleLogout}
-              className="text-sm text-muted hover:text-ink transition-colors flex items-center gap-1.5 px-2.5 py-1 rounded-pill hover:bg-panel border border-transparent hover:border-line"
-            >
-              <span className="italic">Guest session</span>
-              <span>·</span>
-              <span className="font-medium">Exit</span>
-            </button>
-          )}
+            {isGuest && (
+              <div className="flex items-center gap-3">
+                <span className="text-sm text-muted italic">Guest session</span>
+                <button
+                  onClick={handleLogout}
+                  className="inline-flex items-center justify-center text-xs font-semibold uppercase tracking-wider text-muted bg-card border border-line hover:text-[var(--color-danger)] hover:bg-[var(--color-danger-bg)] hover:border-[var(--color-danger)] rounded-pill px-4 py-1.5 transition-colors"
+                >
+                  Exit
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </header>
 
