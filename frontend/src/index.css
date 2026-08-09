@@ -17,37 +17,51 @@
   /* ---------- LIGHT MODE ---------- */
 
   /* Base surfaces */
-  --color-cream: #FFFBF6;        /* page bg (very warm off-white) */
-  --color-card: #FFFFFF;         /* card bg */
-  --color-panel: #FDF5EE;        /* nested panel inside a card */
+  --color-cream: #FFFBF6;
+  /* page bg (very warm off-white) */
+  --color-card: #FFFFFF;
+  /* card bg */
+  --color-panel: #FDF5EE;
+  /* nested panel inside a card */
 
   /* Text */
-  --color-ink: #2B2621;          /* warm charcoal, main text */
-  --color-muted: #85796C;        /* muted warm gray */
+  --color-ink: #2B2621;
+  /* warm charcoal, main text */
+  --color-muted: #85796C;
+  /* muted warm gray */
 
   /* Borders */
   --color-line: #EFE3D6;
   --color-line-strong: #E0CFB8;
 
   /* Hero gradient wash — warm peach/orange -> cool blue/lavender */
-  --color-wash-warm-1: #FBDCC0;  /* peach */
-  --color-wash-warm-2: #F6C9A8;  /* soft orange */
-  --color-wash-cool-1: #D6E4F7;  /* pale sky blue */
-  --color-wash-cool-2: #DCD6F5;  /* pale lavender */
+  --color-wash-warm-1: #FBDCC0;
+  /* peach */
+  --color-wash-warm-2: #F6C9A8;
+  /* soft orange */
+  --color-wash-cool-1: #D6E4F7;
+  /* pale sky blue */
+  --color-wash-cool-2: #DCD6F5;
+  /* pale lavender */
 
   /* Primary gradient family (buttons, active states, accents) */
-  --color-primary-from: #F3B98E; /* warm peach-orange */
-  --color-primary-to:   #A7C4EE; /* cool blue */
-  --color-primary-ink:  #4A3B22; /* text/icons on primary gradient */
+  --color-primary-from: #F3B98E;
+  /* warm peach-orange */
+  --color-primary-to: #A7C4EE;
+  /* cool blue */
+  --color-primary-ink: #4A3B22;
+  /* text/icons on primary gradient */
 
   /* Secondary gradient family (secondary cards, chips) */
-  --color-secondary-from: #E9D6F2; /* soft lavender */
-  --color-secondary-to:   #CFE3F7; /* soft blue */
-  --color-secondary-ink:  #4A3B7A;
+  --color-secondary-from: #E9D6F2;
+  /* soft lavender */
+  --color-secondary-to: #CFE3F7;
+  /* soft blue */
+  --color-secondary-ink: #4A3B7A;
 
   /* Neutral card gradient (subtle warm-white lift, used on most cards) */
   --color-surface-from: #FFFFFF;
-  --color-surface-to:   #FDF6EC;
+  --color-surface-to: #FDF6EC;
 
   /* Semantic — outcome (kept deliberately outside base palette) */
   --color-success: #4E9E6C;
@@ -65,7 +79,8 @@
   --font-display: 'Sora', 'Inter', sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 
-  --radius-card: 1.5rem;    /* 24px */
+  --radius-card: 1.5rem;
+  /* 24px */
   --radius-pill: 999px;
 
   --shadow-soft: 0 8px 30px -12px rgb(43 38 33 / 0.12);
@@ -93,15 +108,15 @@
   --color-wash-cool-2: #262041;
 
   --color-primary-from: #C98F5C;
-  --color-primary-to:   #6E8FD6;
-  --color-primary-ink:  #FCEEDD;
+  --color-primary-to: #6E8FD6;
+  --color-primary-ink: #FCEEDD;
 
   --color-secondary-from: #4A3B63;
-  --color-secondary-to:   #33456B;
-  --color-secondary-ink:  #E7DCF7;
+  --color-secondary-to: #33456B;
+  --color-secondary-ink: #E7DCF7;
 
   --color-surface-from: #211D2E;
-  --color-surface-to:   #262135;
+  --color-surface-to: #262135;
 
   --color-success: #6BC48C;
   --color-success-bg: #1B3327;
@@ -122,15 +137,17 @@
   html {
     color-scheme: light;
   }
+
   html.dark {
     color-scheme: dark;
   }
+
   body {
     background: linear-gradient(150deg,
-      var(--color-wash-warm-1) 0%,
-      var(--color-cream) 22%,
-      var(--color-cream) 78%,
-      var(--color-wash-cool-1) 100%);
+        var(--color-wash-warm-1) 0%,
+        var(--color-cream) 22%,
+        var(--color-cream) 78%,
+        var(--color-wash-cool-1) 100%);
     background-attachment: fixed;
     color: var(--color-ink);
     font-family: var(--font-sans);
@@ -139,17 +156,25 @@
     -moz-osx-font-smoothing: grayscale;
     transition: background-color 0.25s ease, color 0.25s ease;
   }
-  h1, h2, h3 {
+
+  h1,
+  h2,
+  h3 {
     font-family: var(--font-display);
   }
+
   /* Visible keyboard focus everywhere — accessibility floor */
   :focus-visible {
     outline: 2px solid var(--color-primary-to);
     outline-offset: 2px;
     border-radius: 4px;
   }
+
   @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
+
+    *,
+    *::before,
+    *::after {
       animation-duration: 0.001ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.001ms !important;
@@ -159,16 +184,21 @@
 }
 
 @layer utilities {
-  .font-display { font-family: var(--font-display); }
-  .font-mono-readout { font-family: var(--font-mono); }
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  .font-mono-readout {
+    font-family: var(--font-mono);
+  }
 
   /* Atmospheric hero wash — diagonal gradient, used on Landing/Login backdrops */
   .hero-wash {
     background: linear-gradient(115deg,
-      var(--color-wash-warm-1) 0%,
-      var(--color-wash-warm-2) 28%,
-      var(--color-wash-cool-1) 68%,
-      var(--color-wash-cool-2) 100%);
+        var(--color-wash-warm-1) 0%,
+        var(--color-wash-warm-2) 28%,
+        var(--color-wash-cool-1) 68%,
+        var(--color-wash-cool-2) 100%);
   }
 
   /* Standard card surface: soft gradient, not flat white */
@@ -179,12 +209,13 @@
     box-shadow: var(--shadow-card);
   }
 
-  /* Frosted glass card — floating over the hero wash (login/onboarding/popups) */
+  /* Solid card — floating over the hero wash or a scrim (login/onboarding/popups).
+     The card itself stays fully opaque and readable; the blur/translucency lives
+     on the .scrim behind it instead, so content behind the modal blurs, not the
+     modal's own text. */
   .glass-card {
-    background: color-mix(in oklab, var(--color-card) 72%, transparent);
-    backdrop-filter: blur(20px) saturate(140%);
-    -webkit-backdrop-filter: blur(20px) saturate(140%);
-    border: 1px solid color-mix(in oklab, var(--color-line) 60%, transparent);
+    background: var(--color-card);
+    border: 1px solid var(--color-line);
     border-radius: var(--radius-card);
     box-shadow: var(--shadow-soft);
   }
@@ -196,11 +227,13 @@
     border-radius: var(--radius-pill);
     transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
   }
+
   .btn-primary:hover {
     filter: brightness(1.05);
     box-shadow: var(--shadow-soft);
     transform: translateY(-1px);
   }
+
   .btn-primary:active {
     transform: translateY(0px) scale(0.98);
   }
@@ -213,6 +246,7 @@
     color: var(--color-ink);
     transition: border-color 0.15s ease, transform 0.15s ease, background-color 0.15s ease;
   }
+
   .btn-secondary:hover {
     border-color: var(--color-line-strong);
     transform: translateY(-1px);
@@ -236,24 +270,44 @@
   .page-enter {
     animation: page-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
+
   @keyframes page-in {
-    from { opacity: 0; transform: translateY(8px); }
-    to   { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .drawer-enter {
     animation: drawer-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
+
   @keyframes drawer-in {
-    from { transform: translateX(100%); }
-    to   { transform: translateX(0); }
+    from {
+      transform: translateX(100%);
+    }
+
+    to {
+      transform: translateX(0);
+    }
   }
 
   .scrim-enter {
     animation: scrim-in 0.25s ease both;
   }
+
   @keyframes scrim-in {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
   }
 }
