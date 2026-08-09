@@ -50,7 +50,8 @@ const Landing = () => {
         </div>
 
         <nav className="relative z-10 max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
-          <span className="font-display font-semibold text-lg tracking-tight text-ink">
+          <span className="flex items-center gap-2 font-display font-semibold text-lg tracking-tight text-ink">
+            <img src="/favicon.svg" alt="" className="w-7 h-7 rounded-lg" />
             Placement Predictions
           </span>
           <div className="flex items-center gap-4">

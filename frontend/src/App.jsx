@@ -61,7 +61,8 @@ const TopBar = () => {
     <>
       <header className="sticky top-0 z-40 bg-cream/85 backdrop-blur-md border-b border-line">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
-          <Link to={user ? '/profile' : '/'} className="font-display font-semibold text-ink">
+          <Link to={user ? '/profile' : '/'} className="flex items-center gap-2 font-display font-semibold text-ink">
+            <img src="/favicon.svg" alt="" className="w-7 h-7 rounded-lg" />
             Placement Predictions
           </Link>
 
