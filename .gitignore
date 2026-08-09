@@ -1,9 +1,11 @@
+#secrets
+.env
+
 # Python / Backend
 __pycache__/
 *.py[cod]
 *$py.class
 .venv/
-.env
 trained_model/
 
 # Node / Frontend
@@ -42,3 +44,6 @@ dist-ssr
 # Credentials & Secrets
 client_secrets.json
 client_secret.json
+
+# Demo data
+seed_demo.py
