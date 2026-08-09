@@ -17,7 +17,7 @@ const SectionHeading = ({ icon: Icon, title, subtitle }) => (
 );
 
 const Settings = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, updateUser } = useAuth();
   const { theme, setTheme } = useTheme();
   const [displayName, setDisplayName] = useState(user?.name || '');
   const [saved, setSaved] = useState(false);
@@ -36,7 +36,8 @@ const Settings = () => {
     setError(null);
     setSaved(false);
     try {
-      await api.updateProfile({ display_name: displayName.trim() });
+      const updatedUser = await api.updateProfile({ display_name: displayName.trim() });
+      updateUser(updatedUser);
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
     } catch (err) {

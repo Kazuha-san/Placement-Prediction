@@ -41,6 +41,14 @@ export const AuthProvider = ({ children }) => {
     await fetchUser();
   };
 
+  // Lightweight alternative to refreshUser() for small in-place edits (e.g.
+  // Settings' rename) - merges the response straight into state without
+  // touching `loading`, so it doesn't blank the whole app out to a full-page
+  // "Loading..." screen just to reflect a one-field change.
+  const updateUser = (partialUser) => {
+    setUser((prev) => (prev ? { ...prev, ...partialUser } : partialUser));
+  };
+
   useEffect(() => {
     fetchUser();
   }, []);
@@ -72,7 +80,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ user, isGuest, loginAsGuest, loginSuccess, logout, refreshUser }}>
+    <AuthContext.Provider value={{ user, isGuest, loginAsGuest, loginSuccess, logout, refreshUser, updateUser }}>
       {children}
     </AuthContext.Provider>
   );
