@@ -3,12 +3,17 @@ import { Minus, Plus } from 'lucide-react';
 import Tooltip from './Tooltip';
 
 /**
- * Up/down stepper with a "10+" cap label on the final step.
- * value is a number 1-10 internally; 10 displays as "10+".
+ * Up/down stepper. The +/- buttons themselves can never go out of [min, max]
+ * (they just disable at the boundary), so this field is UI-locked into range
+ * by construction - no separate error state needed for the button path.
+ *
+ * showPlusAtMax controls whether hitting the ceiling displays as "10+" (used
+ * for internships - implies "this many or more") vs a flat "10" (used for
+ * backlogs - there's no reason to imply "10+ backlogs" as a badge of honor).
  */
-const StepperField = ({ label, tooltip, name, value, onChange, onBlur, min = 0, max = 10 }) => {
+const StepperField = ({ label, tooltip, name, value, onChange, onBlur, min = 0, max = 10, showPlusAtMax = true }) => {
   const numValue = (value !== undefined && value !== null && value !== '' && !Number.isNaN(Number(value))) ? Number(value) : min;
-  const displayValue = numValue >= max ? `${max}+` : String(numValue);
+  const displayValue = (showPlusAtMax && numValue >= max) ? `${max}+` : String(numValue);
 
   const fireChange = (next) => {
     const clamped = Math.max(min, Math.min(max, next));

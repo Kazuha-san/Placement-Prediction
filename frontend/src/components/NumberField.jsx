@@ -2,21 +2,18 @@ import React from 'react';
 import Tooltip from './Tooltip';
 
 /**
- * Free-typed number entry, floor 1, hard UI ceiling 999 (per spec:
- * open-ended but capped at the UI level so the field can't be abused).
+ * Free-typed number entry (projects, certifications). Types normally like any
+ * number field - no artificial typing restriction - but never silently
+ * corrects an out-of-range value. Instead it flags invalid immediately as
+ * the person types, and stays invalid until they fix it themselves. This is
+ * intentional: silently clamping "9999" to "50" with no feedback hides the
+ * mistake instead of catching it.
  */
-const NumberField = ({ label, tooltip, name, value, onChange, onBlur, error, min = 0, max = 999 }) => {
+const NumberField = ({ label, tooltip, name, value, onChange, onBlur, error, min = 0, max = 50 }) => {
   const handleChange = (e) => {
-    let v = e.target.value;
-    if (v === '') {
-      onChange(e);
-      return;
-    }
-    let num = Number(v);
-    if (Number.isNaN(num)) return;
-    if (num > max) num = max;
-    if (num < min) num = min;
-    onChange({ target: { name, value: String(num), type: 'number' } });
+    // Pass the raw typed value straight through, untouched - validation
+    // (in ProfileForm) decides if it's valid, this field never "fixes" it.
+    onChange({ target: { name, value: e.target.value, type: 'number' } });
   };
 
   return (
@@ -32,14 +29,14 @@ const NumberField = ({ label, tooltip, name, value, onChange, onBlur, error, min
         value={value}
         onChange={handleChange}
         onBlur={onBlur}
-        min={min}
-        max={max}
         placeholder="0"
+        aria-invalid={!!error}
         className={`w-full px-4 py-3 bg-card border-2 rounded-2xl focus:outline-none focus:ring-2
           focus:ring-[var(--color-primary-to)] transition-colors font-mono-readout
           ${error ? 'border-danger' : 'border-line focus:border-transparent'}`}
       />
       {error && <p className="mt-1 text-xs text-danger font-medium">{error}</p>}
+      {!error && <p className="mt-1 text-xs text-muted">0–{max}</p>}
     </div>
   );
 };

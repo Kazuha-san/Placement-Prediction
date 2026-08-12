@@ -20,6 +20,21 @@ const initialFormData = {
   backlogs: 0,
 };
 
+// Single source of truth for numeric bounds - shared by the field widgets
+// (sliders/steppers physically can't exceed these) and by validateField
+// below (the real safety net underneath the UI-level prevention).
+const FIELD_LIMITS = {
+  cgpa: { min: 0, max: 10, label: 'CGPA' },
+  internships: { min: 0, max: 10, label: 'Number of internships' },
+  projects: { min: 0, max: 50, label: 'Number of projects' },
+  certifications: { min: 0, max: 50, label: 'Workshops/certifications' },
+  aptitude_score: { min: 1, max: 100, label: 'Aptitude test score' },
+  soft_skills_rating: { min: 1, max: 10, label: 'Soft skills rating' },
+  backlogs: { min: 0, max: 10, label: 'Active backlogs' },
+};
+
+const BOOLEAN_FIELDS = ['extracurricular_activities', 'placement_training'];
+
 const ProfileForm = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState(initialFormData);
@@ -28,9 +43,27 @@ const ProfileForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
 
+  // Real validation for every numeric field, not just projects/certifications.
+  // Sliders and steppers can't actually reach an out-of-range value through
+  // normal interaction (the widgets themselves enforce it), so this mostly
+  // acts as a defensive backstop for them - but for the free-typed fields
+  // (projects, certifications) this is the only thing standing between a
+  // typo and a bad value, since those fields no longer auto-correct silently.
   const validateField = (name, value) => {
-    if ((name === 'projects' || name === 'certifications') && value === '') {
+    if (BOOLEAN_FIELDS.includes(name)) return null;
+
+    const limits = FIELD_LIMITS[name];
+    if (!limits) return null;
+
+    if (value === '' || value === null || value === undefined) {
       return 'This field is required';
+    }
+    const num = Number(value);
+    if (Number.isNaN(num)) {
+      return 'Enter a valid number';
+    }
+    if (num < limits.min || num > limits.max) {
+      return `${limits.label} must be between ${limits.min} and ${limits.max}`;
     }
     return null;
   };
@@ -39,9 +72,11 @@ const ProfileForm = () => {
     const { name, value, type, checked } = e.target;
     const val = type === 'checkbox' ? checked : value;
     setFormData((prev) => ({ ...prev, [name]: val }));
-    if (touched[name]) {
-      setErrors((prev) => ({ ...prev, [name]: validateField(name, val) }));
-    }
+    // Validate (and start showing errors for) a field as soon as it's
+    // touched at all, not only after blur - typing "999" into Projects
+    // should flag invalid immediately, not wait until the person tabs away.
+    setTouched((prev) => ({ ...prev, [name]: true }));
+    setErrors((prev) => ({ ...prev, [name]: validateField(name, val) }));
   };
 
   const handleBlur = (e) => {
@@ -52,19 +87,21 @@ const ProfileForm = () => {
   };
 
   const isFormValid = () => {
-    return !validateField('projects', formData.projects) && !validateField('certifications', formData.certifications);
+    return Object.keys(FIELD_LIMITS).every((name) => !validateField(name, formData[name]));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitError(null);
-    setTouched({ projects: true, certifications: true });
+
+    const allTouched = {};
+    Object.keys(FIELD_LIMITS).forEach((name) => { allTouched[name] = true; });
+    setTouched((prev) => ({ ...prev, ...allTouched }));
 
     if (!isFormValid()) return;
 
     setIsSubmitting(true);
 
-    // Stepper fields store "10" to represent the capped "10+" option — submit as-is.
     const payload = {
       cgpa: Number(formData.cgpa),
       internships: Number(formData.internships),
@@ -106,20 +143,20 @@ const ProfileForm = () => {
           <StepperField
             label="Number of internships" tooltip="Total internships completed so far"
             name="internships" value={formData.internships} onChange={handleChange} onBlur={handleBlur}
-            min={0} max={10}
+            min={0} max={10} showPlusAtMax
           />
 
           <NumberField
             label="Number of projects" tooltip="Academic or personal projects you've completed"
             name="projects" value={formData.projects} onChange={handleChange} onBlur={handleBlur}
-            min={0}
+            min={0} max={50}
             error={touched.projects && errors.projects}
           />
 
           <NumberField
             label="Workshops / certifications" tooltip="Workshops attended or certifications earned"
             name="certifications" value={formData.certifications} onChange={handleChange} onBlur={handleBlur}
-            min={0}
+            min={0} max={50}
             error={touched.certifications && errors.certifications}
           />
 
@@ -150,7 +187,7 @@ const ProfileForm = () => {
           <StepperField
             label="Active backlogs" tooltip="Your current number of active backlogs"
             name="backlogs" value={formData.backlogs} onChange={handleChange} onBlur={handleBlur}
-            min={0} max={10}
+            min={0} max={10} showPlusAtMax={false}
           />
 
           <div className="mt-8 pt-6 border-t border-line">
