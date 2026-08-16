@@ -16,10 +16,10 @@ const SignIn = () => {
   const [demoLoading, setDemoLoading] = useState(false);
 
   useEffect(() => {
-    if (user || isGuest) {
+    if (user) {
       navigate('/profile', { replace: true });
     }
-  }, [user, isGuest, navigate]);
+  }, [user, navigate]);
 
   const handleGoogleLogin = () => {
     window.location.href = `${API_BASE_URL}/auth/google/login`;
