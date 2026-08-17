@@ -28,8 +28,8 @@ const FIELD_LIMITS = {
   internships: { min: 0, max: 10, label: 'Number of internships' },
   projects: { min: 0, max: 50, label: 'Number of projects' },
   certifications: { min: 0, max: 50, label: 'Workshops/certifications' },
-  aptitude_score: { min: 1, max: 100, label: 'Aptitude test score' },
-  soft_skills_rating: { min: 1, max: 10, label: 'Soft skills rating' },
+  aptitude_score: { min: 0, max: 100, label: 'Aptitude test score' },
+  soft_skills_rating: { min: 0, max: 10, label: 'Soft skills rating' },
   backlogs: { min: 0, max: 10, label: 'Active backlogs' },
 };
 
