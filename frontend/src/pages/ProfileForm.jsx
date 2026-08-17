@@ -11,8 +11,8 @@ import { ClipboardCheck } from 'lucide-react';
 const initialFormData = {
   cgpa: '7.25',
   internships: 0,
-  projects: 0,
-  certifications: 0,
+  projects: '',
+  certifications: '',
   aptitude_score: '75',
   soft_skills_rating: '5.0',
   extracurricular_activities: false,

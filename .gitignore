@@ -1,4 +1,4 @@
-#secrets
+# secrets
 .env
 
 # Python / Backend
@@ -45,5 +45,5 @@ dist-ssr
 client_secrets.json
 client_secret.json
 
-# Demo data
+# seeds
 seed_demo.py
