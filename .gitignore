@@ -47,3 +47,7 @@ client_secret.json
 
 # seeds
 seed_demo.py
+
+# test caches
+.pytest_cache/
+
